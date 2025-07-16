@@ -331,6 +331,48 @@ const Admin = () => {
     }
   };
 
+  const deleteAllPlayers = async () => {
+    if (!confirm('هل أنت متأكد من حذف جميع اللاعبين؟ هذا الإجراء لا يمكن التراجع عنه.')) return;
+
+    try {
+      const { error } = await supabase.from('players').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      fetchData();
+      alert('تم حذف جميع اللاعبين بنجاح');
+    } catch (error) {
+      console.error('Error deleting all players:', error);
+      alert('حدث خطأ أثناء حذف اللاعبين');
+    }
+  };
+
+  const deleteAllTeams = async () => {
+    if (!confirm('هل أنت متأكد من حذف جميع الفرق؟ سيتم حذف جميع اللاعبين والمباريات المرتبطة أيضاً. هذا الإجراء لا يمكن التراجع عنه.')) return;
+
+    try {
+      // Delete all teams (this will cascade delete players and matches due to foreign key constraints)
+      const { error } = await supabase.from('teams').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      fetchData();
+      alert('تم حذف جميع الفرق واللاعبين والمباريات بنجاح');
+    } catch (error) {
+      console.error('Error deleting all teams:', error);
+      alert('حدث خطأ أثناء حذف الفرق');
+    }
+  };
+
+  const deleteAllMatches = async () => {
+    if (!confirm('هل أنت متأكد من حذف جميع المباريات؟ هذا الإجراء لا يمكن التراجع عنه.')) return;
+
+    try {
+      const { error } = await supabase.from('matches').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      fetchData();
+      alert('تم حذف جميع المباريات بنجاح');
+    } catch (error) {
+      console.error('Error deleting all matches:', error);
+      alert('حدث خطأ أثناء حذف المباريات');
+    }
+  };
   if (authLoading) return <LoadingSpinner />;
 
   if (!user) {
@@ -425,13 +467,22 @@ const Admin = () => {
             <div>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900">الفرق</h2>
-                <button
-                  onClick={() => setEditingTeam({ id: '', name: '', logo_url: '', group_name: 'A', wins: 0, draws: 0, losses: 0, goals_for: 0, goals_against: 0, matches_played: 0, points: 0, goal_difference: 0 })}
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>إضافة فريق</span>
-                </button>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={deleteAllTeams}
+                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span>حذف جميع الفرق</span>
+                  </button>
+                  <button
+                    onClick={() => setEditingTeam({ id: '', name: '', logo_url: '', group_name: 'A', wins: 0, draws: 0, losses: 0, goals_for: 0, goals_against: 0, matches_played: 0, points: 0, goal_difference: 0 })}
+                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>إضافة فريق</span>
+                  </button>
+                </div>
               </div>
 
               <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -501,6 +552,13 @@ const Admin = () => {
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900">اللاعبون</h2>
                 <div className="flex space-x-2">
+                  <button
+                    onClick={deleteAllPlayers}
+                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span>حذف جميع اللاعبين</span>
+                  </button>
                   <button
                     onClick={() => setShowPlayerForm(true)}
                     className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
@@ -582,13 +640,22 @@ const Admin = () => {
             <div>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900">المباريات</h2>
-                <button
-                  onClick={() => setEditingMatch({ id: '', date: '', home_team: '', away_team: '', home_score: null, away_score: null, played: false })}
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>إضافة مباراة</span>
-                </button>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={deleteAllMatches}
+                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span>حذف جميع المباريات</span>
+                  </button>
+                  <button
+                    onClick={() => setEditingMatch({ id: '', date: '', home_team: '', away_team: '', home_score: null, away_score: null, played: false })}
+                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>إضافة مباراة</span>
+                  </button>
+                </div>
               </div>
 
               <div className="bg-white rounded-lg shadow overflow-hidden">
