@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Match } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import DefaultAvatar from '../components/DefaultAvatar';
 import MatchDetail from '../components/MatchDetail';
 import { Calendar, Filter } from 'lucide-react';
 
@@ -113,11 +114,15 @@ const Matches = () => {
                 </div>
                 <div className="flex items-center space-x-8">
                   <div className="flex items-center space-x-3">
-                    <img 
-                      src={match.home_team_data?.logo_url} 
-                      alt="" 
-                      className="h-8 w-8 rounded-full"
-                    />
+                    {match.home_team_data?.logo_url ? (
+                      <img 
+                        src={match.home_team_data.logo_url} 
+                        alt="" 
+                        className="h-8 w-8 rounded-full"
+                      />
+                    ) : (
+                      <DefaultAvatar type="team" name={match.home_team_data?.name} size="md" />
+                    )}
                     <span className="font-medium text-gray-900">
                       {match.home_team_data?.name}
                     </span>
@@ -137,11 +142,15 @@ const Matches = () => {
                     <span className="font-medium text-gray-900">
                       {match.away_team_data?.name}
                     </span>
-                    <img 
-                      src={match.away_team_data?.logo_url} 
-                      alt="" 
-                      className="h-8 w-8 rounded-full"
-                    />
+                    {match.away_team_data?.logo_url ? (
+                      <img 
+                        src={match.away_team_data.logo_url} 
+                        alt="" 
+                        className="h-8 w-8 rounded-full"
+                      />
+                    ) : (
+                      <DefaultAvatar type="team" name={match.away_team_data?.name} size="md" />
+                    )}
                   </div>
                 </div>
                 

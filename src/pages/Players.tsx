@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Player, Team } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import DefaultAvatar from '../components/DefaultAvatar';
 import { User, Target, Users } from 'lucide-react';
 
 const Players = () => {
@@ -76,17 +77,19 @@ const Players = () => {
         {filteredPlayers.map((player) => (
           <div key={player.id} className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center space-x-4 mb-4">
-              <div className="h-12 w-12 bg-gray-200 rounded-full flex items-center justify-center">
-                <User className="h-6 w-6 text-gray-600" />
-              </div>
+              <DefaultAvatar type="player" name={player.name} size="lg" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{player.name}</h3>
                 <div className="flex items-center space-x-2">
-                  <img 
-                    src={player.team?.logo_url} 
-                    alt="" 
-                    className="h-4 w-4 rounded-full"
-                  />
+                  {player.team?.logo_url ? (
+                    <img 
+                      src={player.team.logo_url} 
+                      alt="" 
+                      className="h-4 w-4 rounded-full"
+                    />
+                  ) : (
+                    <DefaultAvatar type="team" name={player.team?.name} size="sm" />
+                  )}
                   <span className="text-sm text-gray-600">{player.team?.name}</span>
                 </div>
               </div>

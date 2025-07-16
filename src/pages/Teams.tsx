@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Team } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import DefaultAvatar from '../components/DefaultAvatar';
 import { Users, Trophy, Target, Filter } from 'lucide-react';
 
 const Teams = () => {
@@ -87,11 +88,15 @@ const Teams = () => {
             className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow p-6 block"
           >
             <div className="flex items-center space-x-4 mb-4">
-              <img 
-                src={team.logo_url} 
-                alt={team.name} 
-                className="h-16 w-16 rounded-full"
-              />
+              {team.logo_url ? (
+                <img 
+                  src={team.logo_url} 
+                  alt={team.name} 
+                  className="h-16 w-16 rounded-full"
+                />
+              ) : (
+                <DefaultAvatar type="team" name={team.name} size="lg" className="h-16 w-16" />
+              )}
               <div>
                 <h3 className="text-xl font-semibold text-gray-900">{team.name}</h3>
                 <p className="text-gray-600">المجموعة {team.group_name} • {team.points} نقطة</p>

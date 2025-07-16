@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
 import { Team, Player, Match } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ImageUpload from '../components/ImageUpload';
 import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 
 const Admin = () => {
@@ -456,7 +457,11 @@ const Admin = () => {
                       <tr key={team.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <img className="h-10 w-10 rounded-full" src={team.logo_url} alt={team.name} />
+                            {team.logo_url ? (
+                              <img className="h-10 w-10 rounded-full" src={team.logo_url} alt={team.name} />
+                            ) : (
+                              <DefaultAvatar type="team" name={team.name} size="md" className="h-10 w-10" />
+                            )}
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">{team.name}</div>
                             </div>
@@ -539,7 +544,11 @@ const Admin = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <img className="h-6 w-6 rounded-full" src={player.team?.logo_url} alt="" />
+                            {player.team?.logo_url ? (
+                              <img className="h-6 w-6 rounded-full" src={player.team.logo_url} alt="" />
+                            ) : (
+                              <DefaultAvatar type="team" name={player.team?.name} size="sm" />
+                            )}
                             <span className="ml-2 text-sm text-gray-900">{player.team?.name}</span>
                           </div>
                         </td>
@@ -734,14 +743,12 @@ const Admin = () => {
               </div>
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  رابط الشعار
+                  شعار الفريق (اختياري)
                 </label>
-                <input
-                  type="url"
-                  value={editingTeam.logo_url}
-                  onChange={(e) => setEditingTeam({...editingTeam, logo_url: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  required
+                <ImageUpload
+                  currentImage={editingTeam.logo_url}
+                  onImageChange={(imageUrl) => setEditingTeam({...editingTeam, logo_url: imageUrl})}
+                  placeholder="اختر شعار الفريق أو اتركه فارغاً"
                 />
               </div>
               <div className="flex justify-end space-x-2">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Team, Match } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import DefaultAvatar from '../components/DefaultAvatar';
 import { Calendar, Trophy, Target, Users } from 'lucide-react';
 
 const Home = () => {
@@ -170,7 +171,11 @@ const Home = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <img className="h-8 w-8 rounded-full" src={team.logo_url} alt={team.name} />
+                      {team.logo_url ? (
+                        <img className="h-8 w-8 rounded-full" src={team.logo_url} alt={team.name} />
+                      ) : (
+                        <DefaultAvatar type="team" name={team.name} size="md" />
+                      )}
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{team.name}</div>
                       </div>
@@ -222,7 +227,11 @@ const Home = () => {
               <div key={match.id} className="border rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <img src={match.home_team_data?.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    {match.home_team_data?.logo_url ? (
+                      <img src={match.home_team_data.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    ) : (
+                      <DefaultAvatar type="team" name={match.home_team_data?.name} size="md" />
+                    )}
                     <span className="font-medium">{match.home_team_data?.name}</span>
                   </div>
                   <div className="text-lg font-bold text-gray-900">
@@ -230,7 +239,11 @@ const Home = () => {
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="font-medium">{match.away_team_data?.name}</span>
-                    <img src={match.away_team_data?.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    {match.away_team_data?.logo_url ? (
+                      <img src={match.away_team_data.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    ) : (
+                      <DefaultAvatar type="team" name={match.away_team_data?.name} size="md" />
+                    )}
                   </div>
                 </div>
                 <div className="text-sm text-gray-500 mt-2">
@@ -252,13 +265,21 @@ const Home = () => {
               <div key={match.id} className="border rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <img src={match.home_team_data?.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    {match.home_team_data?.logo_url ? (
+                      <img src={match.home_team_data.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    ) : (
+                      <DefaultAvatar type="team" name={match.home_team_data?.name} size="md" />
+                    )}
                     <span className="font-medium">{match.home_team_data?.name}</span>
                   </div>
                   <div className="text-lg font-bold text-gray-500">ضد</div>
                   <div className="flex items-center space-x-3">
                     <span className="font-medium">{match.away_team_data?.name}</span>
-                    <img src={match.away_team_data?.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    {match.away_team_data?.logo_url ? (
+                      <img src={match.away_team_data.logo_url} alt="" className="h-8 w-8 rounded-full" />
+                    ) : (
+                      <DefaultAvatar type="team" name={match.away_team_data?.name} size="md" />
+                    )}
                   </div>
                 </div>
                 <div className="text-sm text-gray-500 mt-2">

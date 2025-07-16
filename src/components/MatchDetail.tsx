@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { Match, MatchEvent, Player } from '../types';
 import { useAuth } from '../hooks/useAuth';
 import LoadingSpinner from './LoadingSpinner';
+import DefaultAvatar from './DefaultAvatar';
 import { Clock, Target, AlertTriangle, Plus, Save, X } from 'lucide-react';
 
 interface MatchDetailProps {
@@ -182,11 +183,15 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
           <div className="bg-gray-50 rounded-lg p-6 mb-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <img 
-                  src={match.home_team_data?.logo_url} 
-                  alt="" 
-                  className="h-12 w-12 rounded-full"
-                />
+                {match.home_team_data?.logo_url ? (
+                  <img 
+                    src={match.home_team_data.logo_url} 
+                    alt="" 
+                    className="h-12 w-12 rounded-full"
+                  />
+                ) : (
+                  <DefaultAvatar type="team" name={match.home_team_data?.name} size="lg" />
+                )}
                 <div>
                   <h3 className="text-lg font-semibold">{match.home_team_data?.name}</h3>
                   <p className="text-sm text-gray-600">المضيف</p>
@@ -207,11 +212,15 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                   <h3 className="text-lg font-semibold">{match.away_team_data?.name}</h3>
                   <p className="text-sm text-gray-600">الضيف</p>
                 </div>
-                <img 
-                  src={match.away_team_data?.logo_url} 
-                  alt="" 
-                  className="h-12 w-12 rounded-full"
-                />
+                {match.away_team_data?.logo_url ? (
+                  <img 
+                    src={match.away_team_data.logo_url} 
+                    alt="" 
+                    className="h-12 w-12 rounded-full"
+                  />
+                ) : (
+                  <DefaultAvatar type="team" name={match.away_team_data?.name} size="lg" />
+                )}
               </div>
             </div>
           </div>

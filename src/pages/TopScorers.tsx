@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Player } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import DefaultAvatar from '../components/DefaultAvatar';
 import { Trophy, Target, Medal } from 'lucide-react';
 
 const TopScorers = () => {
@@ -65,11 +66,15 @@ const TopScorers = () => {
                   </div>
                   
                   <div className="flex items-center space-x-3">
-                    <img 
-                      src={player.team?.logo_url} 
-                      alt="" 
-                      className="h-10 w-10 rounded-full"
-                    />
+                    {player.team?.logo_url ? (
+                      <img 
+                        src={player.team.logo_url} 
+                        alt="" 
+                        className="h-10 w-10 rounded-full"
+                      />
+                    ) : (
+                      <DefaultAvatar type="team" name={player.team?.name} size="md" className="h-10 w-10" />
+                    )}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
                         {player.name}
