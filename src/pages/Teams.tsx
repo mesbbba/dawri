@@ -57,10 +57,10 @@ const Teams = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Teams</h1>
-        <p className="text-gray-600">All teams in the tournament</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">الفرق</h1>
+        <p className="text-gray-600">جميع فرق البطولة</p>
       </div>
 
       {/* Group Filter */}
@@ -71,11 +71,11 @@ const Teams = () => {
           onChange={(e) => setSelectedGroup(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
         >
-          <option value="all">All Groups</option>
-          <option value="A">Group A</option>
-          <option value="B">Group B</option>
-          <option value="C">Group C</option>
-          <option value="D">Group D</option>
+          <option value="all">جميع المجموعات</option>
+          <option value="A">المجموعة A</option>
+          <option value="B">المجموعة B</option>
+          <option value="C">المجموعة C</option>
+          <option value="D">المجموعة D</option>
         </select>
       </div>
 
@@ -94,37 +94,37 @@ const Teams = () => {
               />
               <div>
                 <h3 className="text-xl font-semibold text-gray-900">{team.name}</h3>
-                <p className="text-gray-600">Group {team.group_name} • {team.points} points</p>
+                <p className="text-gray-600">المجموعة {team.group_name} • {team.points} نقطة</p>
               </div>
             </div>
             
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Matches Played:</span>
+                <span className="text-gray-600">المباريات المُلعبة:</span>
                 <span className="font-medium">{team.matches_played}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Wins:</span>
+                <span className="text-gray-600">الانتصارات:</span>
                 <span className="font-medium text-green-600">{team.wins}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Draws:</span>
+                <span className="text-gray-600">التعادل:</span>
                 <span className="font-medium text-yellow-600">{team.draws}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Losses:</span>
+                <span className="text-gray-600">الهزائم:</span>
                 <span className="font-medium text-red-600">{team.losses}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Goals For:</span>
+                <span className="text-gray-600">الأهداف المُسجلة:</span>
                 <span className="font-medium">{team.goals_for}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Goals Against:</span>
+                <span className="text-gray-600">الأهداف المُستقبلة:</span>
                 <span className="font-medium">{team.goals_against}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Goal Difference:</span>
+                <span className="text-gray-600">فارق الأهداف:</span>
                 <span className={`font-medium ${
                   team.goal_difference >= 0 ? 'text-green-600' : 'text-red-600'
                 }`}>

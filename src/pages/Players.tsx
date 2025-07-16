@@ -49,10 +49,10 @@ const Players = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Players</h1>
-        <p className="text-gray-600">All players in the league</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">اللاعبون</h1>
+        <p className="text-gray-600">جميع لاعبي الدوري</p>
       </div>
 
       {/* Team Filter */}
@@ -62,7 +62,7 @@ const Players = () => {
           onChange={(e) => setSelectedTeam(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
         >
-          <option value="all">All Teams</option>
+          <option value="all">جميع الفرق</option>
           {teams.map((team) => (
             <option key={team.id} value={team.id}>
               {team.name}
@@ -96,7 +96,7 @@ const Players = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Target className="h-4 w-4 text-emerald-600" />
-                  <span className="text-sm text-gray-600">Goals</span>
+                  <span className="text-sm text-gray-600">الأهداف</span>
                 </div>
                 <span className="text-lg font-bold text-emerald-600">{player.goals}</span>
               </div>
@@ -104,14 +104,14 @@ const Players = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm text-gray-600">Assists</span>
+                  <span className="text-sm text-gray-600">التمريرات الحاسمة</span>
                 </div>
                 <span className="text-lg font-bold text-blue-600">{player.assists}</span>
               </div>
               
               <div className="pt-2 border-t">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Total Contributions</span>
+                  <span className="text-sm text-gray-600">إجمالي المساهمات</span>
                   <span className="text-lg font-bold text-gray-900">
                     {player.goals + player.assists}
                   </span>

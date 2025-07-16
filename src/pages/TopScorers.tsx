@@ -48,10 +48,10 @@ const TopScorers = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Top Scorers</h1>
-        <p className="text-gray-600">Leading goal scorers in the league</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">هدافي الدوري</h1>
+        <p className="text-gray-600">أفضل هدافي الدوري</p>
       </div>
 
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -85,13 +85,13 @@ const TopScorers = () => {
                       <div className="text-2xl font-bold text-emerald-600">
                         {player.goals}
                       </div>
-                      <div className="text-xs text-gray-600">Goals</div>
+                      <div className="text-xs text-gray-600">هدف</div>
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-medium text-blue-600">
                         {player.assists}
                       </div>
-                      <div className="text-xs text-gray-600">Assists</div>
+                      <div className="text-xs text-gray-600">تمريرة حاسمة</div>
                     </div>
                   </div>
                 </div>

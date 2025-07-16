@@ -55,10 +55,10 @@ const Matches = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Matches</h1>
-        <p className="text-gray-600">All league fixtures and results</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">المباريات</h1>
+        <p className="text-gray-600">جميع مباريات الدوري والنتائج</p>
       </div>
 
       {/* Filter Buttons */}
@@ -71,7 +71,7 @@ const Matches = () => {
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          All Matches
+          جميع المباريات
         </button>
         <button
           onClick={() => setFilter('played')}
@@ -81,7 +81,7 @@ const Matches = () => {
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          Results
+          النتائج
         </button>
         <button
           onClick={() => setFilter('upcoming')}
@@ -91,7 +91,7 @@ const Matches = () => {
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          Fixtures
+          المباريات القادمة
         </button>
       </div>
 
@@ -129,7 +129,7 @@ const Matches = () => {
                         {match.home_score} - {match.away_score}
                       </div>
                     ) : (
-                      <div className="text-lg font-medium text-gray-500">vs</div>
+                      <div className="text-lg font-medium text-gray-500">ضد</div>
                     )}
                   </div>
                   
@@ -151,7 +151,7 @@ const Matches = () => {
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-blue-100 text-blue-800'
                   }`}>
-                    {match.played ? 'Played' : 'Upcoming'}
+                    {match.played ? 'انتهت' : 'قادمة'}
                   </span>
                 </div>
               </div>

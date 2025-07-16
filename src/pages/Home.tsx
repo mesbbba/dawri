@@ -91,10 +91,10 @@ const Home = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Group Standings</h1>
-        <p className="text-gray-600">Current group standings and recent results</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">ترتيب المجموعات</h1>
+        <p className="text-gray-600">ترتيب المجموعات الحالي والنتائج الأخيرة</p>
       </div>
 
       {/* Group Tabs */}
@@ -113,7 +113,7 @@ const Home = () => {
               >
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4" />
-                  <span>Group {group}</span>
+                  <span>المجموعة {group}</span>
                 </div>
               </button>
             ))}
@@ -124,41 +124,41 @@ const Home = () => {
       {/* Group Table */}
       <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
         <div className="px-6 py-4 bg-gray-50 border-b">
-          <h3 className="text-lg font-semibold text-gray-900">Group {activeGroup}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">المجموعة {activeGroup}</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Pos
+                  المركز
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Team
+                  الفريق
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  MP
+                  لعب
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  W
+                  فوز
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  D
+                  تعادل
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  L
+                  خسارة
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  GF
+                  له
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  GA
+                  عليه
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  GD
+                  الفارق
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Pts
+                  النقاط
                 </th>
               </tr>
             </thead>
@@ -215,7 +215,7 @@ const Home = () => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center mb-4">
             <Trophy className="h-6 w-6 text-emerald-600 mr-2" />
-            <h2 className="text-xl font-semibold text-gray-900">Recent Results</h2>
+            <h2 className="text-xl font-semibold text-gray-900">النتائج الأخيرة</h2>
           </div>
           <div className="space-y-4">
             {recentMatches.map((match) => (
@@ -245,7 +245,7 @@ const Home = () => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center mb-4">
             <Calendar className="h-6 w-6 text-blue-600 mr-2" />
-            <h2 className="text-xl font-semibold text-gray-900">Upcoming Fixtures</h2>
+            <h2 className="text-xl font-semibold text-gray-900">المباريات القادمة</h2>
           </div>
           <div className="space-y-4">
             {upcomingMatches.map((match) => (
@@ -255,7 +255,7 @@ const Home = () => {
                     <img src={match.home_team_data?.logo_url} alt="" className="h-8 w-8 rounded-full" />
                     <span className="font-medium">{match.home_team_data?.name}</span>
                   </div>
-                  <div className="text-lg font-bold text-gray-500">vs</div>
+                  <div className="text-lg font-bold text-gray-500">ضد</div>
                   <div className="flex items-center space-x-3">
                     <span className="font-medium">{match.away_team_data?.name}</span>
                     <img src={match.away_team_data?.logo_url} alt="" className="h-8 w-8 rounded-full" />

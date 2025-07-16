@@ -337,12 +337,12 @@ const Admin = () => {
       <div className="max-w-md mx-auto mt-8 px-4">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold text-center mb-6">
-            {isSignUp ? 'Create Admin Account' : 'Admin Login'}
+            {isSignUp ? 'إنشاء حساب إداري' : 'تسجيل دخول الإدارة'}
           </h2>
           <form onSubmit={handleSignIn}>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Email
+                البريد الإلكتروني
               </label>
               <input
                 type="email"
@@ -354,7 +354,7 @@ const Admin = () => {
             </div>
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Password
+                كلمة المرور
               </label>
               <input
                 type="password"
@@ -368,7 +368,7 @@ const Admin = () => {
               type="submit"
               className="w-full bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 transition-colors"
             >
-              {isSignUp ? 'Create Account' : 'Sign In'}
+              {isSignUp ? 'إنشاء حساب' : 'تسجيل الدخول'}
             </button>
           </form>
           <div className="mt-4 text-center">
@@ -376,7 +376,7 @@ const Admin = () => {
               onClick={() => setIsSignUp(!isSignUp)}
               className="text-emerald-600 hover:text-emerald-700 text-sm"
             >
-              {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
+              {isSignUp ? 'لديك حساب بالفعل؟ تسجيل الدخول' : 'تحتاج حساب؟ إنشاء حساب'}
             </button>
           </div>
         </div>
@@ -385,14 +385,14 @@ const Admin = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+        <h1 className="text-3xl font-bold text-gray-900">لوحة الإدارة</h1>
         <button
           onClick={signOut}
           className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
         >
-          Sign Out
+          تسجيل الخروج
         </button>
       </div>
 
@@ -423,13 +423,13 @@ const Admin = () => {
           {activeTab === 'teams' && (
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">Teams</h2>
+                <h2 className="text-2xl font-semibold text-gray-900">الفرق</h2>
                 <button
                   onClick={() => setEditingTeam({ id: '', name: '', logo_url: '', group_name: 'A', wins: 0, draws: 0, losses: 0, goals_for: 0, goals_against: 0, matches_played: 0, points: 0, goal_difference: 0 })}
                   className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                 >
                   <Plus className="h-4 w-4" />
-                  <span>Add Team</span>
+                  <span>إضافة فريق</span>
                 </button>
               </div>
 
@@ -438,16 +438,16 @@ const Admin = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Team
+                        الفريق
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Group
+                        المجموعة
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Stats
+                        الإحصائيات
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        الإجراءات
                       </th>
                     </tr>
                   </thead>
@@ -463,10 +463,10 @@ const Admin = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          Group {team.group_name}
+                          المجموعة {team.group_name}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {team.wins}W {team.draws}D {team.losses}L | {team.goals_for}-{team.goals_against}
+                          {team.wins}ف {team.draws}ت {team.losses}خ | {team.goals_for}-{team.goals_against}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
@@ -494,21 +494,21 @@ const Admin = () => {
           {activeTab === 'players' && (
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">Players</h2>
+                <h2 className="text-2xl font-semibold text-gray-900">اللاعبون</h2>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => setShowPlayerForm(true)}
                     className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
                   >
                     <Plus className="h-4 w-4" />
-                    <span>Quick Add Player</span>
+                    <span>إضافة سريعة للاعب</span>
                   </button>
                   <button
                     onClick={() => setEditingPlayer({ id: '', name: '', team_id: '', goals: 0, assists: 0 })}
                     className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                   >
                     <Plus className="h-4 w-4" />
-                    <span>Add Player with Stats</span>
+                    <span>إضافة لاعب مع الإحصائيات</span>
                   </button>
                 </div>
               </div>
@@ -518,16 +518,16 @@ const Admin = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Player
+                        اللاعب
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Team
+                        الفريق
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Stats
+                        الإحصائيات
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        الإجراءات
                       </th>
                     </tr>
                   </thead>
@@ -544,7 +544,7 @@ const Admin = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {player.goals} goals, {player.assists} assists
+                          {player.goals} هدف، {player.assists} تمريرة حاسمة
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
@@ -572,13 +572,13 @@ const Admin = () => {
           {activeTab === 'matches' && (
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">Matches</h2>
+                <h2 className="text-2xl font-semibold text-gray-900">المباريات</h2>
                 <button
                   onClick={() => setEditingMatch({ id: '', date: '', home_team: '', away_team: '', home_score: null, away_score: null, played: false })}
                   className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                 >
                   <Plus className="h-4 w-4" />
-                  <span>Add Match</span>
+                  <span>إضافة مباراة</span>
                 </button>
               </div>
 
@@ -587,16 +587,16 @@ const Admin = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
+                        التاريخ
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Match
+                        المباراة
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Result
+                        النتيجة
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        الإجراءات
                       </th>
                     </tr>
                   </thead>
@@ -608,11 +608,11 @@ const Admin = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {match.home_team_data?.name} vs {match.away_team_data?.name}
+                            {match.home_team_data?.name} ضد {match.away_team_data?.name}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {match.played ? `${match.home_score} - ${match.away_score}` : 'Not played'}
+                          {match.played ? `${match.home_score} - ${match.away_score}` : 'لم تُلعب بعد'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
@@ -642,11 +642,11 @@ const Admin = () => {
       {showPlayerForm && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Quick Add Player</h3>
+            <h3 className="text-lg font-semibold mb-4">إضافة سريعة للاعب</h3>
             <form onSubmit={handleAddPlayer}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Player Name
+                  اسم اللاعب
                 </label>
                 <input
                   type="text"
@@ -654,12 +654,12 @@ const Admin = () => {
                   onChange={(e) => setNewPlayer({...newPlayer, name: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
-                  placeholder="Enter player name"
+                  placeholder="أدخل اسم اللاعب"
                 />
               </div>
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Team
+                  الفريق
                 </label>
                 <select
                   value={newPlayer.team_id}
@@ -667,10 +667,10 @@ const Admin = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 >
-                  <option value="">Select a team</option>
+                  <option value="">اختر فريق</option>
                   {teams.map((team) => (
                     <option key={team.id} value={team.id}>
-                      {team.name} (Group {team.group_name})
+                      {team.name} (المجموعة {team.group_name})
                     </option>
                   ))}
                 </select>
@@ -681,14 +681,14 @@ const Admin = () => {
                   onClick={() => setShowPlayerForm(false)}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
-                  Cancel
+                  إلغاء
                 </button>
                 <button
                   type="submit"
                   className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
-                  <span>Add Player</span>
+                  <span>إضافة لاعب</span>
                 </button>
               </div>
             </form>
@@ -701,12 +701,12 @@ const Admin = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">
-              {editingTeam.id ? 'Edit Team' : 'Add Team'}
+              {editingTeam.id ? 'تعديل الفريق' : 'إضافة فريق'}
             </h3>
             <form onSubmit={handleTeamSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Team Name
+                  اسم الفريق
                 </label>
                 <input
                   type="text"
@@ -718,7 +718,7 @@ const Admin = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Group
+                  المجموعة
                 </label>
                 <select
                   value={editingTeam.group_name}
@@ -726,15 +726,15 @@ const Admin = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 >
-                  <option value="A">Group A</option>
-                  <option value="B">Group B</option>
-                  <option value="C">Group C</option>
-                  <option value="D">Group D</option>
+                  <option value="A">المجموعة A</option>
+                  <option value="B">المجموعة B</option>
+                  <option value="C">المجموعة C</option>
+                  <option value="D">المجموعة D</option>
                 </select>
               </div>
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Logo URL
+                  رابط الشعار
                 </label>
                 <input
                   type="url"
@@ -750,14 +750,14 @@ const Admin = () => {
                   onClick={() => setEditingTeam(null)}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
-                  <X className="h-4 w-4" />
+                  إلغاء
                 </button>
                 <button
                   type="submit"
                   className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
-                  <span>Save</span>
+                  <span>حفظ</span>
                 </button>
               </div>
             </form>
@@ -770,12 +770,12 @@ const Admin = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">
-              {editingPlayer.id ? 'Edit Player' : 'Add Player'}
+              {editingPlayer.id ? 'تعديل اللاعب' : 'إضافة لاعب'}
             </h3>
             <form onSubmit={handlePlayerSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Player Name
+                  اسم اللاعب
                 </label>
                 <input
                   type="text"
@@ -787,7 +787,7 @@ const Admin = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Team
+                  الفريق
                 </label>
                 <select
                   value={editingPlayer.team_id}
@@ -795,7 +795,7 @@ const Admin = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 >
-                  <option value="">Select a team</option>
+                  <option value="">اختر فريق</option>
                   {teams.map((team) => (
                     <option key={team.id} value={team.id}>
                       {team.name}
@@ -805,7 +805,7 @@ const Admin = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Goals
+                  الأهداف
                 </label>
                 <input
                   type="number"
@@ -817,7 +817,7 @@ const Admin = () => {
               </div>
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Assists
+                  التمريرات الحاسمة
                 </label>
                 <input
                   type="number"
@@ -833,14 +833,14 @@ const Admin = () => {
                   onClick={() => setEditingPlayer(null)}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
-                  <X className="h-4 w-4" />
+                  إلغاء
                 </button>
                 <button
                   type="submit"
                   className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
-                  <span>Save</span>
+                  <span>حفظ</span>
                 </button>
               </div>
             </form>
@@ -853,12 +853,12 @@ const Admin = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">
-              {editingMatch.id ? 'Edit Match' : 'Add Match'}
+              {editingMatch.id ? 'تعديل المباراة' : 'إضافة مباراة'}
             </h3>
             <form onSubmit={handleMatchSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date
+                  التاريخ
                 </label>
                 <input
                   type="date"
@@ -870,7 +870,7 @@ const Admin = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Home Team
+                  الفريق المضيف
                 </label>
                 <select
                   value={editingMatch.home_team}
@@ -878,7 +878,7 @@ const Admin = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 >
-                  <option value="">Select home team</option>
+                  <option value="">اختر الفريق المضيف</option>
                   {teams.map((team) => (
                     <option key={team.id} value={team.id}>
                       {team.name}
@@ -888,7 +888,7 @@ const Admin = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Away Team
+                  الفريق الضيف
                 </label>
                 <select
                   value={editingMatch.away_team}
@@ -896,7 +896,7 @@ const Admin = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 >
-                  <option value="">Select away team</option>
+                  <option value="">اختر الفريق الضيف</option>
                   {teams.map((team) => (
                     <option key={team.id} value={team.id}>
                       {team.name}
@@ -912,14 +912,14 @@ const Admin = () => {
                     onChange={(e) => setEditingMatch({...editingMatch, played: e.target.checked})}
                     className="mr-2"
                   />
-                  <span className="text-sm font-medium text-gray-700">Match played</span>
+                  <span className="text-sm font-medium text-gray-700">المباراة مُلعبة</span>
                 </label>
               </div>
               {editingMatch.played && (
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Home Score
+                      نتيجة المضيف
                     </label>
                     <input
                       type="number"
@@ -931,7 +931,7 @@ const Admin = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Away Score
+                      نتيجة الضيف
                     </label>
                     <input
                       type="number"
@@ -949,14 +949,14 @@ const Admin = () => {
                   onClick={() => setEditingMatch(null)}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
-                  <X className="h-4 w-4" />
+                  إلغاء
                 </button>
                 <button
                   type="submit"
                   className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
-                  <span>Save</span>
+                  <span>حفظ</span>
                 </button>
               </div>
             </form>

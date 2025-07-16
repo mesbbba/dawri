@@ -7,28 +7,28 @@ const Navbar = () => {
   const location = useLocation();
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Matches', path: '/matches' },
-    { name: 'Teams', path: '/teams' },
-    { name: 'Players', path: '/players' },
-    { name: 'Top Scorers', path: '/top-scorers' },
-    { name: 'Admin', path: '/admin' },
+    { name: 'الرئيسية', path: '/' },
+    { name: 'المباريات', path: '/matches' },
+    { name: 'الفرق', path: '/teams' },
+    { name: 'اللاعبون', path: '/players' },
+    { name: 'هدافي الدوري', path: '/top-scorers' },
+    { name: 'الإدارة', path: '/admin' },
   ];
 
   return (
-    <nav className="bg-emerald-600 text-white shadow-lg">
+    <nav className="bg-emerald-600 text-white shadow-lg" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <Trophy className="h-8 w-8" />
-              <span className="text-xl font-bold">Football League</span>
+              <span className="text-xl font-bold">دوري كرة القدم</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 space-x-reverse">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}

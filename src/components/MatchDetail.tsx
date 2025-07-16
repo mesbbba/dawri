@@ -166,10 +166,10 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto" dir="rtl">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Match Details</h2>
+            <h2 className="text-2xl font-bold text-gray-900">تفاصيل المباراة</h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
@@ -189,13 +189,13 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                 />
                 <div>
                   <h3 className="text-lg font-semibold">{match.home_team_data?.name}</h3>
-                  <p className="text-sm text-gray-600">Home</p>
+                  <p className="text-sm text-gray-600">المضيف</p>
                 </div>
               </div>
               
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900">
-                  {match.played ? `${match.home_score} - ${match.away_score}` : 'vs'}
+                  {match.played ? `${match.home_score} - ${match.away_score}` : 'ضد'}
                 </div>
                 <div className="text-sm text-gray-600">
                   {new Date(match.date).toLocaleDateString()}
@@ -205,7 +205,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
               <div className="flex items-center space-x-4">
                 <div className="text-right">
                   <h3 className="text-lg font-semibold">{match.away_team_data?.name}</h3>
-                  <p className="text-sm text-gray-600">Away</p>
+                  <p className="text-sm text-gray-600">الضيف</p>
                 </div>
                 <img 
                   src={match.away_team_data?.logo_url} 
@@ -224,7 +224,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                 className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
               >
                 <Plus className="h-4 w-4" />
-                <span>Add Event</span>
+                <span>إضافة حدث</span>
               </button>
             </div>
           )}
@@ -233,11 +233,11 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
               <Clock className="h-5 w-5" />
-              <span>Match Events</span>
+              <span>أحداث المباراة</span>
             </h3>
             
             {events.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No events recorded for this match</p>
+              <p className="text-gray-500 text-center py-8">لا توجد أحداث مسجلة لهذه المباراة</p>
             ) : (
               <div className="space-y-3">
                 {events.map((event) => (
@@ -252,12 +252,12 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                           {event.player?.name}
                         </div>
                         <div className="text-sm text-gray-600">
-                          {event.event_type === 'goal' && 'Goal'}
-                          {event.event_type === 'red_card' && 'Red Card'}
-                          {event.event_type === 'yellow_card' && 'Yellow Card'}
+                          {event.event_type === 'goal' && 'هدف'}
+                          {event.event_type === 'red_card' && 'بطاقة حمراء'}
+                          {event.event_type === 'yellow_card' && 'بطاقة صفراء'}
                           {event.assist_player && (
                             <span className="ml-2">
-                              (Assist: {event.assist_player.name})
+                              (تمريرة حاسمة: {event.assist_player.name})
                             </span>
                           )}
                         </div>
@@ -283,11 +283,11 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
         {showAddEvent && user && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-60">
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h3 className="text-lg font-semibold mb-4">Add Match Event</h3>
+              <h3 className="text-lg font-semibold mb-4">إضافة حدث للمباراة</h3>
               <form onSubmit={addEvent}>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Event Type
+                    نوع الحدث
                   </label>
                   <select
                     value={newEvent.event_type}
@@ -295,15 +295,15 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     required
                   >
-                    <option value="goal">Goal</option>
-                    <option value="yellow_card">Yellow Card</option>
-                    <option value="red_card">Red Card</option>
+                    <option value="goal">هدف</option>
+                    <option value="yellow_card">بطاقة صفراء</option>
+                    <option value="red_card">بطاقة حمراء</option>
                   </select>
                 </div>
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Player
+                    اللاعب
                   </label>
                   <select
                     value={newEvent.player_id}
@@ -311,7 +311,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     required
                   >
-                    <option value="">Select player</option>
+                    <option value="">اختر لاعب</option>
                     <optgroup label={match.home_team_data?.name}>
                       {getPlayersByTeam(match.home_team).map((player) => (
                         <option key={player.id} value={player.id}>
@@ -331,7 +331,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Minute
+                    الدقيقة
                   </label>
                   <input
                     type="number"
@@ -347,14 +347,14 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                 {newEvent.event_type === 'goal' && (
                   <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Assist (Optional)
+                      التمريرة الحاسمة (اختياري)
                     </label>
                     <select
                       value={newEvent.assist_player_id}
                       onChange={(e) => setNewEvent({...newEvent, assist_player_id: e.target.value})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
-                      <option value="">No assist</option>
+                      <option value="">بدون تمريرة حاسمة</option>
                       <optgroup label={match.home_team_data?.name}>
                         {getPlayersByTeam(match.home_team)
                           .filter(p => p.id !== newEvent.player_id)
@@ -383,14 +383,14 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                     onClick={() => setShowAddEvent(false)}
                     className="px-4 py-2 text-gray-600 hover:text-gray-800"
                   >
-                    Cancel
+                    إلغاء
                   </button>
                   <button
                     type="submit"
                     className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                   >
                     <Save className="h-4 w-4" />
-                    <span>Add Event</span>
+                    <span>إضافة حدث</span>
                   </button>
                 </div>
               </form>
