@@ -22,7 +22,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <Trophy className="h-8 w-8" />
-              <span className="text-xl font-bold">دوري كرة القدم</span>
+              <span className="text-xl font-bold">دوري  تمدوين</span>
             </Link>
           </div>
 
