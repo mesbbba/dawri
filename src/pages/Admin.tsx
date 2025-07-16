@@ -423,12 +423,12 @@ const Admin = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8" dir="rtl">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">لوحة الإدارة</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">لوحة الإدارة</h1>
         <button
           onClick={signOut}
-          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+          className="bg-red-600 text-white px-3 py-2 sm:px-4 text-sm sm:text-base rounded-md hover:bg-red-700 transition-colors"
         >
           تسجيل الخروج
         </button>
@@ -436,18 +436,20 @@ const Admin = () => {
 
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-8">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-2 sm:space-x-8 overflow-x-auto">
           {(['teams', 'players', 'matches'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm capitalize ${
+              className={`py-2 px-2 sm:px-4 border-b-2 font-medium text-xs sm:text-sm capitalize whitespace-nowrap ${
                 activeTab === tab
                   ? 'border-emerald-500 text-emerald-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {tab}
+              {tab === 'teams' && 'الفرق'}
+              {tab === 'players' && 'اللاعبون'}
+              {tab === 'matches' && 'المباريات'}
             </button>
           ))}
         </nav>
@@ -460,19 +462,19 @@ const Admin = () => {
           {/* Teams Tab */}
           {activeTab === 'teams' && (
             <div>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">الفرق</h2>
-                <div className="flex space-x-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">الفرق</h2>
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   <button
                     onClick={deleteAllTeams}
-                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                    className="bg-red-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Trash2 className="h-4 w-4" />
                     <span>حذف جميع الفرق</span>
                   </button>
                   <button
                     onClick={() => setEditingTeam({ id: '', name: '', logo_url: '', group_name: 'A', wins: 0, draws: 0, losses: 0, goals_for: 0, goals_against: 0, matches_played: 0, points: 0, goal_difference: 0 })}
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                    className="bg-emerald-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Plus className="h-4 w-4" />
                     <span>إضافة فريق</span>
@@ -480,20 +482,20 @@ const Admin = () => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
+              <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         الفريق
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         المجموعة
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                         الإحصائيات
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         الإجراءات
                       </th>
                     </tr>
@@ -501,37 +503,39 @@ const Admin = () => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {teams.map((team) => (
                       <tr key={team.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             {team.logo_url ? (
-                              <img className="h-10 w-10 rounded-full" src={team.logo_url} alt={team.name} />
+                              <img className="h-8 w-8 sm:h-10 sm:w-10 rounded-full" src={team.logo_url} alt={team.name} />
                             ) : (
-                              <DefaultAvatar type="team" name={team.name} size="md" className="h-10 w-10" />
+                              <DefaultAvatar type="team" name={team.name} size="md" className="h-8 w-8 sm:h-10 sm:w-10" />
                             )}
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{team.name}</div>
+                            <div className="ml-2 sm:ml-4">
+                              <div className="text-xs sm:text-sm font-medium text-gray-900">{team.name}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                           المجموعة {team.group_name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
                           {team.wins}ف {team.draws}ت {team.losses}خ | {team.goals_for}-{team.goals_against}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button
-                            onClick={() => setEditingTeam(team)}
-                            className="text-indigo-600 hover:text-indigo-900 mr-4"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => deleteTeam(team.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => setEditingTeam(team)}
+                              className="text-indigo-600 hover:text-indigo-900 p-1"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteTeam(team.id)}
+                              className="text-red-600 hover:text-red-900 p-1"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -544,26 +548,26 @@ const Admin = () => {
           {/* Players Tab */}
           {activeTab === 'players' && (
             <div>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">اللاعبون</h2>
-                <div className="flex space-x-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">اللاعبون</h2>
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   <button
                     onClick={deleteAllPlayers}
-                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                    className="bg-red-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Trash2 className="h-4 w-4" />
                     <span>حذف جميع اللاعبين</span>
                   </button>
                   <button
                     onClick={() => setShowPlayerForm(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                    className="bg-blue-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Plus className="h-4 w-4" />
                     <span>إضافة سريعة للاعب</span>
                   </button>
                   <button
                     onClick={() => setEditingPlayer({ id: '', name: '', team_id: '', goals: 0, assists: 0 })}
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                    className="bg-emerald-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Plus className="h-4 w-4" />
                     <span>إضافة لاعب مع الإحصائيات</span>
@@ -571,20 +575,20 @@ const Admin = () => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
+              <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         اللاعب
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         الفريق
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                         الإحصائيات
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         الإجراءات
                       </th>
                     </tr>
@@ -592,35 +596,37 @@ const Admin = () => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {players.map((player) => (
                       <tr key={player.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{player.name}</div>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-xs sm:text-sm font-medium text-gray-900">{player.name}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             {player.team?.logo_url ? (
-                              <img className="h-6 w-6 rounded-full" src={player.team.logo_url} alt="" />
+                              <img className="h-4 w-4 sm:h-6 sm:w-6 rounded-full" src={player.team.logo_url} alt="" />
                             ) : (
                               <DefaultAvatar type="team" name={player.team?.name} size="sm" />
                             )}
-                            <span className="ml-2 text-sm text-gray-900">{player.team?.name}</span>
+                            <span className="ml-1 sm:ml-2 text-xs sm:text-sm text-gray-900">{player.team?.name}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
                           {player.goals} هدف، {player.assists} تمريرة حاسمة
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button
-                            onClick={() => setEditingPlayer(player)}
-                            className="text-indigo-600 hover:text-indigo-900 mr-4"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => deletePlayer(player.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => setEditingPlayer(player)}
+                              className="text-indigo-600 hover:text-indigo-900 p-1"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deletePlayer(player.id)}
+                              className="text-red-600 hover:text-red-900 p-1"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -633,19 +639,19 @@ const Admin = () => {
           {/* Matches Tab */}
           {activeTab === 'matches' && (
             <div>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">المباريات</h2>
-                <div className="flex space-x-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">المباريات</h2>
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   <button
                     onClick={deleteAllMatches}
-                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                    className="bg-red-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Trash2 className="h-4 w-4" />
                     <span>حذف جميع المباريات</span>
                   </button>
                   <button
                     onClick={() => setEditingMatch({ id: '', date: '', home_team: '', away_team: '', home_score: null, away_score: null, played: false })}
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                    className="bg-emerald-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Plus className="h-4 w-4" />
                     <span>إضافة مباراة</span>
@@ -653,20 +659,20 @@ const Admin = () => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
+              <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         التاريخ
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         المباراة
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                         النتيجة
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         الإجراءات
                       </th>
                     </tr>
@@ -674,30 +680,32 @@ const Admin = () => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {matches.map((match) => (
                       <tr key={match.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                           {new Date(match.date).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <div className="text-xs sm:text-sm text-gray-900">
                             {match.home_team_data?.name} ضد {match.away_team_data?.name}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
                           {match.played ? `${match.home_score} - ${match.away_score}` : 'لم تُلعب بعد'}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button
-                            onClick={() => setEditingMatch(match)}
-                            className="text-indigo-600 hover:text-indigo-900 mr-4"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => deleteMatch(match.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => setEditingMatch(match)}
+                              className="text-indigo-600 hover:text-indigo-900 p-1"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteMatch(match.id)}
+                              className="text-red-600 hover:text-red-900 p-1"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -711,8 +719,8 @@ const Admin = () => {
 
       {/* Quick Add Player Form */}
       {showPlayerForm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50" dir="rtl">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-semibold mb-4">إضافة سريعة للاعب</h3>
             <form onSubmit={handleAddPlayer}>
               <div className="mb-4">
@@ -746,17 +754,17 @@ const Admin = () => {
                   ))}
                 </select>
               </div>
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
                   type="button"
                   onClick={() => setShowPlayerForm(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 text-center"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
                   <span>إضافة لاعب</span>
@@ -769,8 +777,8 @@ const Admin = () => {
 
       {/* Edit Team Modal */}
       {editingTeam && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50" dir="rtl">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-semibold mb-4">
               {editingTeam.id ? 'تعديل الفريق' : 'إضافة فريق'}
             </h3>
@@ -813,17 +821,17 @@ const Admin = () => {
                   placeholder="اختر شعار الفريق أو اتركه فارغاً"
                 />
               </div>
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
                   type="button"
                   onClick={() => setEditingTeam(null)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 text-center"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
                   <span>حفظ</span>
@@ -836,8 +844,8 @@ const Admin = () => {
 
       {/* Edit Player Modal */}
       {editingPlayer && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50" dir="rtl">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-semibold mb-4">
               {editingPlayer.id ? 'تعديل اللاعب' : 'إضافة لاعب'}
             </h3>
@@ -896,17 +904,17 @@ const Admin = () => {
                   min="0"
                 />
               </div>
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
                   type="button"
                   onClick={() => setEditingPlayer(null)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 text-center"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
                   <span>حفظ</span>
@@ -919,8 +927,8 @@ const Admin = () => {
 
       {/* Edit Match Modal */}
       {editingMatch && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50" dir="rtl">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-semibold mb-4">
               {editingMatch.id ? 'تعديل المباراة' : 'إضافة مباراة'}
             </h3>
@@ -1012,17 +1020,17 @@ const Admin = () => {
                   </div>
                 </div>
               )}
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
                   type="button"
                   onClick={() => setEditingMatch(null)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 text-center"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
                   <span>حفظ</span>
