@@ -415,12 +415,7 @@ const Admin = () => {
             </button>
           </form>
           <div className="mt-4 text-center">
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-emerald-600 hover:text-emerald-700 text-sm"
-            >
-              {isSignUp ? 'لديك حساب بالفعل؟ تسجيل الدخول' : 'تحتاج حساب؟ إنشاء حساب'}
-            </button>
+            
           </div>
         </div>
       </div>
