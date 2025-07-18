@@ -207,7 +207,11 @@ const Admin = () => {
             away_team: editingMatch.away_team,
             home_score: editingMatch.home_score,
             away_score: editingMatch.away_score,
-            played: editingMatch.played || false,
+            played: editingMatch.status === 'finished',
+            status: editingMatch.status || 'scheduled',
+            live_home_score: 0,
+            live_away_score: 0,
+            current_minute: 0,
           }]);
 
         if (error) throw error;

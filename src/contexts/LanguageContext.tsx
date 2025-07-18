@@ -16,6 +16,7 @@ const translations = {
     'nav.teams': 'الفرق',
     'nav.players': 'اللاعبون',
     'nav.topScorers': 'هدافي الدوري',
+    'nav.live': 'المباشر',
     'nav.admin': 'الإدارة',
     'nav.title': 'دوري تمدوين',
     
@@ -79,6 +80,7 @@ const translations = {
     'nav.teams': 'Équipes',
     'nav.players': 'Joueurs',
     'nav.topScorers': 'Meilleurs Buteurs',
+    'nav.live': 'En Direct',
     'nav.admin': 'Administration',
     'nav.title': 'Ligue Tamdouin',
     

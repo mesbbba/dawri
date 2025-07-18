@@ -15,6 +15,7 @@ const Navbar = () => {
     { name: t('nav.teams'), path: '/teams' },
     { name: t('nav.players'), path: '/players' },
     { name: t('nav.topScorers'), path: '/top-scorers' },
+    { name: t('nav.live'), path: '/live' },
     { name: t('nav.admin'), path: '/admin' },
   ];
 

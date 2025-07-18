@@ -31,6 +31,10 @@ export interface Match {
   home_score: number | null;
   away_score: number | null;
   played: boolean;
+  status: 'scheduled' | 'live' | 'finished';
+  live_home_score: number;
+  live_away_score: number;
+  current_minute: number;
   home_team_data?: Team;
   away_team_data?: Team;
   events?: MatchEvent[];

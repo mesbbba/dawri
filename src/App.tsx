@@ -7,6 +7,7 @@ import Matches from './pages/Matches';
 import Teams from './pages/Teams';
 import Players from './pages/Players';
 import TopScorers from './pages/TopScorers';
+import LiveMatches from './pages/LiveMatches';
 import Admin from './pages/Admin';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
               <Route path="/teams" element={<Teams />} />
               <Route path="/players" element={<Players />} />
               <Route path="/top-scorers" element={<TopScorers />} />
+              <Route path="/live" element={<LiveMatches />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>
           </main>
