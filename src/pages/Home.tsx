@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Team, Match } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DefaultAvatar from '../components/DefaultAvatar';
 import { Calendar, Trophy, Target, Users } from 'lucide-react';
 
 const Home = () => {
+  const { t, language } = useLanguage();
   const [groupedTeams, setGroupedTeams] = useState<Record<string, Team[]>>({});
   const [recentMatches, setRecentMatches] = useState<Match[]>([]);
   const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
@@ -92,29 +94,31 @@ const Home = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" dir="rtl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">ترتيب المجموعات</h1>
-        <p className="text-gray-600">ترتيب المجموعات الحالي والنتائج الأخيرة</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-4">
+          {t('home.title')}
+        </h1>
+        <p className="text-gray-600 text-lg max-w-2xl mx-auto">{t('home.subtitle')}</p>
       </div>
 
       {/* Group Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+      <div className="mb-8">
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-2 shadow-lg">
+          <nav className="flex flex-wrap justify-center gap-2">
             {['A', 'B', 'C', 'D'].map((group) => (
               <button
                 key={group}
                 onClick={() => setActiveGroup(group)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-3 px-6 rounded-xl font-medium text-sm transition-all duration-300 hover:scale-105 ${
                   activeGroup === group
-                    ? 'border-emerald-500 text-emerald-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+                    : 'text-gray-600 hover:bg-white/50 hover:text-gray-800'
                 }`}
               >
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4" />
-                  <span>المجموعة {group}</span>
+                  <span>{t('home.group')} {group}</span>
                 </div>
               </button>
             ))}
@@ -123,51 +127,58 @@ const Home = () => {
       </div>
 
       {/* Group Table */}
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-        <div className="px-6 py-4 bg-gray-50 border-b">
-          <h3 className="text-lg font-semibold text-gray-900">المجموعة {activeGroup}</h3>
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden mb-8 border border-white/20">
+        <div className="px-6 py-4 bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100">
+          <h3 className="text-xl font-bold text-gray-800">{t('home.group')} {activeGroup}</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-100">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  المركز
+                  {t('table.position')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  الفريق
+                  {t('table.team')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  لعب
+                  {t('table.played')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  فوز
+                  {t('table.wins')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  تعادل
+                  {t('table.draws')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  خسارة
+                  {t('table.losses')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  له
+                  {t('table.goalsFor')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  عليه
+                  {t('table.goalsAgainst')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  الفارق
+                  {t('table.goalDifference')}
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  النقاط
+                  {t('table.points')}
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white/50 divide-y divide-gray-100">
               {(groupedTeams[activeGroup] || []).map((team, index) => (
-                <tr key={team.id} className="hover:bg-gray-50">
+                <tr key={team.id} className="hover:bg-white/70 transition-colors duration-200">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {index + 1}
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+                      index === 0 ? 'bg-gradient-to-r from-yellow-400 to-orange-400' :
+                      index === 1 ? 'bg-gradient-to-r from-gray-300 to-gray-400' :
+                      index === 2 ? 'bg-gradient-to-r from-amber-600 to-yellow-600' :
+                      'bg-gradient-to-r from-slate-400 to-slate-500'
+                    }`}>
+                      {index + 1}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -176,7 +187,7 @@ const Home = () => {
                       ) : (
                         <DefaultAvatar type="team" name={team.name} size="md" />
                       )}
-                      <div className="ml-4">
+                      <div className={language === 'ar' ? 'mr-4' : 'ml-4'}>
                         <div className="text-sm font-medium text-gray-900">{team.name}</div>
                       </div>
                     </div>
@@ -205,7 +216,9 @@ const Home = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-900">
-                    {team.points}
+                    <span className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full">
+                      {team.points}
+                    </span>
                   </td>
                 </tr>
               ))}
@@ -215,16 +228,18 @@ const Home = () => {
       </div>
 
       {/* Recent and Upcoming Matches */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Recent Matches */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20">
           <div className="flex items-center mb-4">
-            <Trophy className="h-6 w-6 text-emerald-600 mr-2" />
-            <h2 className="text-xl font-semibold text-gray-900">النتائج الأخيرة</h2>
+            <Trophy className="h-6 w-6 text-emerald-600 mr-3" />
+            <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              {t('home.recentResults')}
+            </h2>
           </div>
           <div className="space-y-4">
             {recentMatches.map((match) => (
-              <div key={match.id} className="border rounded-lg p-4">
+              <div key={match.id} className="bg-gradient-to-r from-white/50 to-gray-50/50 backdrop-blur-sm border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all duration-300">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     {match.home_team_data?.logo_url ? (
@@ -234,7 +249,7 @@ const Home = () => {
                     )}
                     <span className="font-medium">{match.home_team_data?.name}</span>
                   </div>
-                  <div className="text-lg font-bold text-gray-900">
+                  <div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg">
                     {match.home_score} - {match.away_score}
                   </div>
                   <div className="flex items-center space-x-3">
@@ -246,7 +261,7 @@ const Home = () => {
                     )}
                   </div>
                 </div>
-                <div className="text-sm text-gray-500 mt-2">
+                <div className="text-sm text-gray-600 mt-3 text-center font-medium">
                   {new Date(match.date).toLocaleDateString()}
                 </div>
               </div>
@@ -255,14 +270,16 @@ const Home = () => {
         </div>
 
         {/* Upcoming Matches */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20">
           <div className="flex items-center mb-4">
-            <Calendar className="h-6 w-6 text-blue-600 mr-2" />
-            <h2 className="text-xl font-semibold text-gray-900">المباريات القادمة</h2>
+            <Calendar className="h-6 w-6 text-blue-600 mr-3" />
+            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              {t('home.upcomingMatches')}
+            </h2>
           </div>
           <div className="space-y-4">
             {upcomingMatches.map((match) => (
-              <div key={match.id} className="border rounded-lg p-4">
+              <div key={match.id} className="bg-gradient-to-r from-white/50 to-blue-50/50 backdrop-blur-sm border border-blue-200 rounded-xl p-4 hover:shadow-lg transition-all duration-300">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     {match.home_team_data?.logo_url ? (
@@ -272,7 +289,9 @@ const Home = () => {
                     )}
                     <span className="font-medium">{match.home_team_data?.name}</span>
                   </div>
-                  <div className="text-lg font-bold text-gray-500">ضد</div>
+                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg">
+                    {t('home.vs')}
+                  </div>
                   <div className="flex items-center space-x-3">
                     <span className="font-medium">{match.away_team_data?.name}</span>
                     {match.away_team_data?.logo_url ? (
@@ -282,7 +301,7 @@ const Home = () => {
                     )}
                   </div>
                 </div>
-                <div className="text-sm text-gray-500 mt-2">
+                <div className="text-sm text-gray-600 mt-3 text-center font-medium">
                   {new Date(match.date).toLocaleDateString()}
                 </div>
               </div>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Team, Player, Match } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ImageUpload from '../components/ImageUpload';
 import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 
 const Admin = () => {
+  const { t, language } = useLanguage();
   const { user, loading: authLoading, signIn, signOut } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -377,39 +379,44 @@ const Admin = () => {
 
   if (!user) {
     return (
-      <div className="max-w-md mx-auto mt-8 px-4">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-center mb-6">
+      <div className="max-w-md mx-auto mt-8 px-4" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
+          <div className="text-center mb-8">
+            <div className="bg-gradient-to-r from-emerald-500 to-teal-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Trophy className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
             {isSignUp ? 'إنشاء حساب إداري' : 'تسجيل دخول الإدارة'}
-          </h2>
+            </h2>
+          </div>
           <form onSubmit={handleSignIn}>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label className="block text-gray-700 text-sm font-semibold mb-3">
                 البريد الإلكتروني
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
                 required
               />
             </div>
             <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label className="block text-gray-700 text-sm font-semibold mb-3">
                 كلمة المرور
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
                 required
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 transition-colors"
+              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-6 rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               {isSignUp ? 'إنشاء حساب' : 'تسجيل الدخول'}
             </button>
@@ -423,36 +430,40 @@ const Admin = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8" dir="rtl">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">لوحة الإدارة</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
+        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+          {t('admin.title')}
+        </h1>
         <button
           onClick={signOut}
-          className="bg-red-600 text-white px-3 py-2 sm:px-4 text-sm sm:text-base rounded-md hover:bg-red-700 transition-colors"
+          className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
         >
-          تسجيل الخروج
+          {t('admin.signOut')}
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-8">
+      <div className="mb-8">
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-2 shadow-lg">
         <nav className="-mb-px flex space-x-2 sm:space-x-8 overflow-x-auto">
           {(['teams', 'players', 'matches'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-2 px-2 sm:px-4 border-b-2 font-medium text-xs sm:text-sm capitalize whitespace-nowrap ${
+              className={`py-3 px-4 sm:px-6 rounded-xl font-medium text-xs sm:text-sm whitespace-nowrap transition-all duration-300 hover:scale-105 ${
                 activeTab === tab
-                  ? 'border-emerald-500 text-emerald-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+                  : 'text-gray-600 hover:bg-white/50 hover:text-gray-800'
               }`}
             >
-              {tab === 'teams' && 'الفرق'}
-              {tab === 'players' && 'اللاعبون'}
-              {tab === 'matches' && 'المباريات'}
+              {tab === 'teams' && t('admin.teams')}
+              {tab === 'players' && t('admin.players')}
+              {tab === 'matches' && t('admin.matches')}
             </button>
           ))}
         </nav>
+        </div>
       </div>
 
       {loading ? (
@@ -463,46 +474,46 @@ const Admin = () => {
           {activeTab === 'teams' && (
             <div>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
-                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">الفرق</h2>
+                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{t('admin.teams')}</h2>
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   <button
                     onClick={deleteAllTeams}
-                    className="bg-red-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+                    className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
                     <Trash2 className="h-4 w-4" />
-                    <span>حذف جميع الفرق</span>
+                    <span>{t('admin.deleteAll')} {t('admin.teams')}</span>
                   </button>
                   <button
                     onClick={() => setEditingTeam({ id: '', name: '', logo_url: '', group_name: 'A', wins: 0, draws: 0, losses: 0, goals_for: 0, goals_against: 0, matches_played: 0, points: 0, goal_difference: 0 })}
-                    className="bg-emerald-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
                     <Plus className="h-4 w-4" />
-                    <span>إضافة فريق</span>
+                    <span>{t('admin.addTeam')}</span>
                   </button>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden overflow-x-auto border border-white/20">
                 <table className="min-w-full divide-y divide-gray-200 text-sm">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-gradient-to-r from-emerald-50 to-teal-50">
                     <tr>
                       <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        الفريق
+                        {t('table.team')}
                       </th>
                       <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        المجموعة
+                        {t('form.group')}
                       </th>
                       <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                         الإحصائيات
                       </th>
                       <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        الإجراءات
+                        {t('admin.actions')}
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white/50 divide-y divide-gray-100">
                     {teams.map((team) => (
-                      <tr key={team.id}>
+                      <tr key={team.id} className="hover:bg-white/70 transition-colors duration-200">
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             {team.logo_url ? (
@@ -510,13 +521,13 @@ const Admin = () => {
                             ) : (
                               <DefaultAvatar type="team" name={team.name} size="md" className="h-8 w-8 sm:h-10 sm:w-10" />
                             )}
-                            <div className="ml-2 sm:ml-4">
+                            <div className={`${language === 'ar' ? 'mr-2 sm:mr-4' : 'ml-2 sm:ml-4'}`}>
                               <div className="text-xs sm:text-sm font-medium text-gray-900">{team.name}</div>
                             </div>
                           </div>
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
-                          المجموعة {team.group_name}
+                          {t('home.group')} {team.group_name}
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
                           {team.wins}ف {team.draws}ت {team.losses}خ | {team.goals_for}-{team.goals_against}
@@ -525,13 +536,13 @@ const Admin = () => {
                           <div className="flex space-x-2">
                             <button
                               onClick={() => setEditingTeam(team)}
-                              className="text-indigo-600 hover:text-indigo-900 p-1"
+                              className="text-indigo-600 hover:text-indigo-900 p-2 rounded-lg hover:bg-indigo-50 transition-colors duration-200"
                             >
                               <Edit2 className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => deleteTeam(team.id)}
-                              className="text-red-600 hover:text-red-900 p-1"
+                              className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors duration-200"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>

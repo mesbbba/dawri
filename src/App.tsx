@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { LanguageProvider } from './contexts/LanguageContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Matches from './pages/Matches';
@@ -10,21 +11,23 @@ import Admin from './pages/Admin';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/matches" element={<Matches />} />
-            <Route path="/teams" element={<Teams />} />
-            <Route path="/players" element={<Players />} />
-            <Route path="/top-scorers" element={<TopScorers />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+          <Navbar />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/matches" element={<Matches />} />
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/players" element={<Players />} />
+              <Route path="/top-scorers" element={<TopScorers />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 }
 
