@@ -264,7 +264,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="text-sm text-gray-600 mt-3 text-center font-medium">
-                  {new Date(match.date).toLocaleDateString()}
+                  {new Date(match.date).toLocaleDateString()} - {match.time}
                 </div>
               </div>
             ))}
@@ -304,7 +304,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="text-sm text-gray-600 mt-3 text-center font-medium">
-                  {new Date(match.date).toLocaleDateString()}
+                  {new Date(match.date).toLocaleDateString()} - {match.time}
                 </div>
               </div>
             ))}

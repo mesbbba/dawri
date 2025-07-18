@@ -38,6 +38,7 @@ const translations = {
     'table.goalsAgainst': 'عليه',
     'table.goalDifference': 'الفارق',
     'table.points': 'النقاط',
+    'table.time': 'الوقت',
     
     // Admin
     'admin.title': 'لوحة الإدارة',
@@ -61,6 +62,8 @@ const translations = {
     'form.cancel': 'إلغاء',
     'form.goals': 'الأهداف',
     'form.assists': 'التمريرات الحاسمة',
+    'form.date': 'التاريخ',
+    'form.time': 'الوقت',
     
     // Common
     'common.loading': 'جاري التحميل...',
@@ -98,6 +101,7 @@ const translations = {
     'table.goalsAgainst': 'BC',
     'table.goalDifference': 'Diff',
     'table.points': 'Pts',
+    'table.time': 'Heure',
     
     // Admin
     'admin.title': 'Panneau d\'Administration',
@@ -121,6 +125,8 @@ const translations = {
     'form.cancel': 'Annuler',
     'form.goals': 'Buts',
     'form.assists': 'Passes décisives',
+    'form.date': 'Date',
+    'form.time': 'Heure',
     
     // Common
     'common.loading': 'Chargement...',

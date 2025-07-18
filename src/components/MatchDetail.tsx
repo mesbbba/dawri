@@ -203,7 +203,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, onClose, onUpdate }) =
                   {match.played ? `${match.home_score} - ${match.away_score}` : 'ضد'}
                 </div>
                 <div className="text-sm text-gray-600">
-                  {new Date(match.date).toLocaleDateString()}
+                  {new Date(match.date).toLocaleDateString()} - {match.time}
                 </div>
               </div>
               
