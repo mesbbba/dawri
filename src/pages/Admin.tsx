@@ -225,7 +225,7 @@ const Admin = () => {
   };
 
   const updateTeamStats = async (match: Match) => {
-    if (!match.played || match.home_score === null || match.away_score === null) return;
+    if (match.status !== 'finished' || match.home_score === null || match.away_score === null) return;
 
     try {
       const homeTeam = teams.find(t => t.id === match.home_team);
