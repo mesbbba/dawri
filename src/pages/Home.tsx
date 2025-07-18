@@ -64,6 +64,7 @@ const Home = () => {
         `)
         .eq('played', true)
         .order('date', { ascending: false })
+        .order('time', { ascending: false })
         .limit(3);
 
       if (recentError) throw recentError;
@@ -79,6 +80,7 @@ const Home = () => {
         `)
         .eq('played', false)
         .order('date', { ascending: true })
+        .order('time', { ascending: true })
         .limit(3);
 
       if (upcomingError) throw upcomingError;

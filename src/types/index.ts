@@ -25,6 +25,7 @@ export interface Player {
 export interface Match {
   id: string;
   date: string;
+  time: string;
   home_team: string;
   away_team: string;
   home_score: number | null;

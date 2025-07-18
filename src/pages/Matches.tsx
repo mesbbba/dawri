@@ -30,7 +30,8 @@ const Matches = () => {
           home_team_data:teams!matches_home_team_fkey(name, logo_url),
           away_team_data:teams!matches_away_team_fkey(name, logo_url)
         `)
-        .order('date', { ascending: false });
+        .order('date', { ascending: false })
+        .order('time', { ascending: true });
 
       if (error) throw error;
       setMatches(data || []);
@@ -108,7 +109,7 @@ const Matches = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="text-sm text-gray-500">
-                    {new Date(match.date).toLocaleDateString()}
+                    {new Date(match.date).toLocaleDateString()} - {match.time}
                   </div>
                   <Calendar className="h-4 w-4 text-gray-400" />
                 </div>

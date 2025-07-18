@@ -48,7 +48,7 @@ const Admin = () => {
           *,
           home_team_data:teams!matches_home_team_fkey(name, logo_url),
           away_team_data:teams!matches_away_team_fkey(name, logo_url)
-        `).order('date', { ascending: false })
+        `).order('date', { ascending: false }).order('time', { ascending: true })
       ]);
 
       if (teamsResponse.error) throw teamsResponse.error;
@@ -181,6 +181,7 @@ const Admin = () => {
           .from('matches')
           .update({
             date: editingMatch.date,
+            time: editingMatch.time,
             home_team: editingMatch.home_team,
             away_team: editingMatch.away_team,
             home_score: editingMatch.home_score,
@@ -201,6 +202,7 @@ const Admin = () => {
           .from('matches')
           .insert([{
             date: editingMatch.date,
+            time: editingMatch.time,
             home_team: editingMatch.home_team,
             away_team: editingMatch.away_team,
             home_score: editingMatch.home_score,
@@ -661,7 +663,7 @@ const Admin = () => {
                     <span>حذف جميع المباريات</span>
                   </button>
                   <button
-                    onClick={() => setEditingMatch({ id: '', date: '', home_team: '', away_team: '', home_score: null, away_score: null, played: false })}
+                    onClick={() => setEditingMatch({ id: '', date: '', time: '15:00', home_team: '', away_team: '', home_score: null, away_score: null, played: false })}
                     className="bg-emerald-600 text-white px-3 py-2 sm:px-4 text-sm rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                   >
                     <Plus className="h-4 w-4" />
@@ -676,6 +678,9 @@ const Admin = () => {
                     <tr>
                       <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         التاريخ
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                        {language === 'ar' ? 'الوقت' : 'Heure'}
                       </th>
                       <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         المباراة
@@ -693,6 +698,9 @@ const Admin = () => {
                       <tr key={match.id}>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                           {new Date(match.date).toLocaleDateString()}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
+                          {match.time}
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                           <div className="text-xs sm:text-sm text-gray-900">
@@ -952,6 +960,18 @@ const Admin = () => {
                   type="date"
                   value={editingMatch.date}
                   onChange={(e) => setEditingMatch({...editingMatch, date: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {language === 'ar' ? 'الوقت' : 'Heure'}
+                </label>
+                <input
+                  type="time"
+                  value={editingMatch.time}
+                  onChange={(e) => setEditingMatch({...editingMatch, time: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 />
