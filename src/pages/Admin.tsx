@@ -225,7 +225,7 @@ const Admin = () => {
   };
 
   const updateTeamStats = async (match: Match) => {
-    if (match.status !== 'finished' || match.home_score === null || match.away_score === null) return;
+    if (!match.played || match.home_score === null || match.away_score === null) return;
 
     try {
       const homeTeam = teams.find(t => t.id === match.home_team);
@@ -712,7 +712,15 @@ const Admin = () => {
                           </div>
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
-                          {match.played ? `${match.home_score} - ${match.away_score}` : 'لم تُلعب بعد'}
+                          {match.status === 'live' ? (
+                            <span className="text-red-600 font-medium">
+                              مباشر: {match.live_home_score} - {match.live_away_score}
+                            </span>
+                          ) : match.status === 'finished' ? (
+                            `${match.home_score} - ${match.away_score}`
+                          ) : (
+                            'لم تُلعب بعد'
+                          )}
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">

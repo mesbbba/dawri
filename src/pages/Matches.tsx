@@ -46,9 +46,9 @@ const Matches = () => {
     let filtered = matches;
     
     if (filter === 'played') {
-      filtered = matches.filter(match => match.played);
+      filtered = matches.filter(match => match.status === 'finished');
     } else if (filter === 'upcoming') {
-      filtered = matches.filter(match => !match.played);
+      filtered = matches.filter(match => match.status === 'scheduled');
     }
 
     setFilteredMatches(filtered);

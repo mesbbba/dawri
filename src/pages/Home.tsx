@@ -292,7 +292,14 @@ const Home = () => {
                     <span className="font-medium">{match.home_team_data?.name}</span>
                   </div>
                   <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg">
-                    {t('home.vs')}
+                    {match.status === 'live' ? (
+                      <div className="text-center">
+                        <div>{match.live_home_score} - {match.live_away_score}</div>
+                        <div className="text-xs">{match.current_minute}' LIVE</div>
+                      </div>
+                    ) : (
+                      t('home.vs')
+                    )}
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="font-medium">{match.away_team_data?.name}</span>
