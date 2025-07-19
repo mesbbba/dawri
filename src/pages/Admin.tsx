@@ -50,7 +50,7 @@ const Admin = () => {
           *,
           home_team_data:teams!matches_home_team_fkey(name, logo_url),
           away_team_data:teams!matches_away_team_fkey(name, logo_url)
-        `).order('date', { ascending: false }).order('time', { ascending: true })
+        `).order('date', { ascending: false }).order('time', { ascending: true }),
         supabase.from('elimination_matches').select(`
           *,
           team1_data:teams!elimination_matches_team1_id_fkey(name, logo_url),
@@ -808,6 +808,114 @@ const Admin = () => {
                             <button
                               onClick={() => deleteMatch(match.id)}
                               className="text-red-600 hover:text-red-900 p-1"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Eliminations Tab */}
+          {activeTab === 'eliminations' && (
+            <div>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
+                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
+                  {language === 'ar' ? 'مرحلة الإقصاء' : 'Phase Éliminatoire'}
+                </h2>
+                <button
+                  onClick={() => setEditingEliminationMatch({ 
+                    id: '', 
+                    stage: 'quarter', 
+                    match_number: 1, 
+                    team1_id: null, 
+                    team2_id: null, 
+                    winner_id: null,
+                    team1_score: null, 
+                    team2_score: null, 
+                    date: '', 
+                    time: '15:00', 
+                    status: 'scheduled',
+                    live_team1_score: 0,
+                    live_team2_score: 0,
+                    current_minute: 0,
+                    created_at: ''
+                  })}
+                  className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>{language === 'ar' ? 'إضافة مباراة إقصائية' : 'Ajouter Match Éliminatoire'}</span>
+                </button>
+              </div>
+
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden overflow-x-auto border border-white/20">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                  <thead className="bg-gradient-to-r from-yellow-50 to-orange-50">
+                    <tr>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {language === 'ar' ? 'المرحلة' : 'Phase'}
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {language === 'ar' ? 'المباراة' : 'Match'}
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                        {language === 'ar' ? 'التاريخ' : 'Date'}
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                        {language === 'ar' ? 'الحالة' : 'Statut'}
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {t('admin.actions')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white/50 divide-y divide-gray-100">
+                    {eliminationMatches.map((match) => (
+                      <tr key={match.id} className="hover:bg-white/70 transition-colors duration-200">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                          {match.stage === 'quarter' && (language === 'ar' ? 'ربع النهائي' : 'Quart')}
+                          {match.stage === 'semi' && (language === 'ar' ? 'نصف النهائي' : 'Demi')}
+                          {match.stage === 'final' && (language === 'ar' ? 'النهائي' : 'Finale')}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                          <div className="space-y-1">
+                            <div>{match.team1_data?.name || (language === 'ar' ? 'غير محدد' : 'Non défini')}</div>
+                            <div className="text-gray-500">ضد</div>
+                            <div>{match.team2_data?.name || (language === 'ar' ? 'غير محدد' : 'Non défini')}</div>
+                          </div>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
+                          {new Date(match.date).toLocaleDateString()}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                            match.status === 'live' 
+                              ? 'bg-red-100 text-red-800' 
+                              : match.status === 'finished'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-blue-100 text-blue-800'
+                          }`}>
+                            {match.status === 'live' && (language === 'ar' ? 'مباشر' : 'Live')}
+                            {match.status === 'finished' && (language === 'ar' ? 'انتهت' : 'Terminé')}
+                            {match.status === 'scheduled' && (language === 'ar' ? 'مجدولة' : 'Programmé')}
+                          </span>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => setEditingEliminationMatch(match)}
+                              className="text-indigo-600 hover:text-indigo-900 p-2 rounded-lg hover:bg-indigo-50 transition-colors duration-200"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteEliminationMatch(match.id)}
+                              className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors duration-200"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
