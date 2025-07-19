@@ -8,6 +8,7 @@ import Teams from './pages/Teams';
 import Players from './pages/Players';
 import TopScorers from './pages/TopScorers';
 import LiveMatches from './pages/LiveMatches';
+import Eliminations from './pages/Eliminations';
 import Admin from './pages/Admin';
 
 function App() {

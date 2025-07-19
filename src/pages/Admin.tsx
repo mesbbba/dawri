@@ -50,8 +50,8 @@ const Admin = () => {
           *,
           home_team_data:teams!matches_home_team_fkey(name, logo_url),
           away_team_data:teams!matches_away_team_fkey(name, logo_url)
-        `).order('date', { ascending: false }).order('time', { ascending: true })
-        supabase.from('elimination_matches').select(`
+        `).order('date', { ascending: false }).order('time', { ascending: true });
+        const { data: eliminationData, error: eliminationError } = await supabase.from('elimination_matches').select(`
           *,
           team1_data:teams!elimination_matches_team1_id_fkey(name, logo_url),
           team2_data:teams!elimination_matches_team2_id_fkey(name, logo_url),
