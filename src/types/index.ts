@@ -40,6 +40,27 @@ export interface Match {
   events?: MatchEvent[];
 }
 
+export interface EliminationMatch {
+  id: string;
+  stage: 'quarter' | 'semi' | 'final';
+  match_number: number;
+  team1_id: string | null;
+  team2_id: string | null;
+  winner_id: string | null;
+  team1_score: number | null;
+  team2_score: number | null;
+  date: string;
+  time: string;
+  status: 'scheduled' | 'live' | 'finished';
+  live_team1_score: number;
+  live_team2_score: number;
+  current_minute: number;
+  created_at: string;
+  team1_data?: Team;
+  team2_data?: Team;
+  winner_data?: Team;
+}
+
 export interface MatchEvent {
   id: string;
   match_id: string;

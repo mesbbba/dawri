@@ -16,13 +16,15 @@ const Admin = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
+  const [eliminationMatches, setEliminationMatches] = useState<EliminationMatch[]>([]);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'teams' | 'players' | 'matches'>('teams');
+  const [activeTab, setActiveTab] = useState<'teams' | 'players' | 'matches' | 'eliminations'>('teams');
 
   // Form states
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
   const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
   const [editingMatch, setEditingMatch] = useState<Match | null>(null);
+  const [editingEliminationMatch, setEditingEliminationMatch] = useState<EliminationMatch | null>(null);
   const [showPlayerForm, setShowPlayerForm] = useState(false);
   const [newPlayer, setNewPlayer] = useState({
     name: '',
@@ -38,7 +40,7 @@ const Admin = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [teamsResponse, playersResponse, matchesResponse] = await Promise.all([
+      const [teamsResponse, playersResponse, matchesResponse, eliminationResponse] = await Promise.all([
         supabase.from('teams').select('*').order('name'),
         supabase.from('players').select(`
           *,
@@ -49,15 +51,23 @@ const Admin = () => {
           home_team_data:teams!matches_home_team_fkey(name, logo_url),
           away_team_data:teams!matches_away_team_fkey(name, logo_url)
         `).order('date', { ascending: false }).order('time', { ascending: true })
+        supabase.from('elimination_matches').select(`
+          *,
+          team1_data:teams!elimination_matches_team1_id_fkey(name, logo_url),
+          team2_data:teams!elimination_matches_team2_id_fkey(name, logo_url),
+          winner_data:teams!elimination_matches_winner_id_fkey(name, logo_url)
+        `).order('stage', { ascending: false }).order('match_number')
       ]);
 
       if (teamsResponse.error) throw teamsResponse.error;
       if (playersResponse.error) throw playersResponse.error;
       if (matchesResponse.error) throw matchesResponse.error;
+      if (eliminationResponse.error) throw eliminationResponse.error;
 
       setTeams(teamsResponse.data || []);
       setPlayers(playersResponse.data || []);
       setMatches(matchesResponse.data || []);
+      setEliminationMatches(eliminationResponse.data || []);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -224,6 +234,58 @@ const Admin = () => {
     }
   };
 
+  const handleEliminationMatchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingEliminationMatch) return;
+
+    try {
+      if (editingEliminationMatch.id) {
+        // Update existing elimination match
+        const { error } = await supabase
+          .from('elimination_matches')
+          .update({
+            stage: editingEliminationMatch.stage,
+            match_number: editingEliminationMatch.match_number,
+            team1_id: editingEliminationMatch.team1_id,
+            team2_id: editingEliminationMatch.team2_id,
+            date: editingEliminationMatch.date,
+            time: editingEliminationMatch.time,
+            team1_score: editingEliminationMatch.team1_score,
+            team2_score: editingEliminationMatch.team2_score,
+            status: editingEliminationMatch.status,
+          })
+          .eq('id', editingEliminationMatch.id);
+
+        if (error) throw error;
+      } else {
+        // Create new elimination match
+        const { error } = await supabase
+          .from('elimination_matches')
+          .insert([{
+            stage: editingEliminationMatch.stage,
+            match_number: editingEliminationMatch.match_number,
+            team1_id: editingEliminationMatch.team1_id,
+            team2_id: editingEliminationMatch.team2_id,
+            date: editingEliminationMatch.date,
+            time: editingEliminationMatch.time,
+            team1_score: editingEliminationMatch.team1_score,
+            team2_score: editingEliminationMatch.team2_score,
+            status: editingEliminationMatch.status || 'scheduled',
+            live_team1_score: 0,
+            live_team2_score: 0,
+            current_minute: 0,
+          }]);
+
+        if (error) throw error;
+      }
+
+      setEditingEliminationMatch(null);
+      fetchData();
+    } catch (error) {
+      console.error('Error saving elimination match:', error);
+    }
+  };
+
   const updateTeamStats = async (match: Match) => {
     if (!match.played || match.home_score === null || match.away_score === null) return;
 
@@ -336,6 +398,18 @@ const Admin = () => {
       fetchData();
     } catch (error) {
       console.error('Error deleting match:', error);
+    }
+  };
+
+  const deleteEliminationMatch = async (id: string) => {
+    if (!confirm('هل أنت متأكد من حذف هذه المباراة؟')) return;
+
+    try {
+      const { error } = await supabase.from('elimination_matches').delete().eq('id', id);
+      if (error) throw error;
+      fetchData();
+    } catch (error) {
+      console.error('Error deleting elimination match:', error);
     }
   };
 
@@ -453,7 +527,7 @@ const Admin = () => {
       <div className="mb-8">
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-2 shadow-lg">
         <nav className="-mb-px flex space-x-2 sm:space-x-8 overflow-x-auto">
-          {(['teams', 'players', 'matches'] as const).map((tab) => (
+          {(['teams', 'players', 'matches', 'eliminations'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -466,6 +540,7 @@ const Admin = () => {
               {tab === 'teams' && t('admin.teams')}
               {tab === 'players' && t('admin.players')}
               {tab === 'matches' && t('admin.matches')}
+              {tab === 'eliminations' && (language === 'ar' ? 'مرحلة الإقصاء' : 'Éliminations')}
             </button>
           ))}
         </nav>
