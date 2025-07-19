@@ -17,7 +17,7 @@ const translations = {
     'nav.players': 'اللاعبون',
     'nav.topScorers': 'هدافي الدوري',
     'nav.live': 'المباشر',
-     'nav.eliminations': 'المباشر',
+     'nav.eliminations': 'الإقصاءيات',
     
     'nav.admin': 'الإدارة',
     'nav.title': 'دوري تمدوين',
