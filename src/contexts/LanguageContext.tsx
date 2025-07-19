@@ -81,6 +81,7 @@ const translations = {
     'nav.players': 'Joueurs',
     'nav.topScorers': 'Meilleurs Buteurs',
     'nav.live': 'En Direct',
+    'nav.eliminations': 'Éliminations',
     'nav.admin': 'Administration',
     'nav.title': 'Ligue Tamdouin',
     

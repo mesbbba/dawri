@@ -24,6 +24,7 @@ function App() {
               <Route path="/players" element={<Players />} />
               <Route path="/top-scorers" element={<TopScorers />} />
               <Route path="/live" element={<LiveMatches />} />
+              <Route path="/eliminations" element={<Eliminations />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>
           </main>
