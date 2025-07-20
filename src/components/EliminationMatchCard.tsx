@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { EliminationMatch } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
