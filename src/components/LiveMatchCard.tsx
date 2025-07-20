@@ -187,11 +187,104 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
         .eq('id', match.id);
 
       if (error) throw error;
+      
+      // Update team statistics in real-time based on current live scores
+      await updateLiveTeamStats(newHomeScore, newAwayScore);
       onUpdate();
     } catch (error) {
       console.error('Error updating score:', error);
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const updateLiveTeamStats = async (homeScore: number, awayScore: number) => {
+    try {
+      // Fetch current team stats
+      const { data: homeTeam } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', match.home_team)
+        .single();
+        
+      const { data: awayTeam } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', match.away_team)
+        .single();
+
+      if (!homeTeam || !awayTeam) return;
+
+      // Calculate what the stats should be based on current live score
+      let homeWins = homeTeam.wins;
+      let homeDraws = homeTeam.draws;
+      let homeLosses = homeTeam.losses;
+      let awayWins = awayTeam.wins;
+      let awayDraws = awayTeam.draws;
+      let awayLosses = awayTeam.losses;
+
+      // Remove previous live match result if it was already counted
+      const previousHomeScore = match.home_score || 0;
+      const previousAwayScore = match.away_score || 0;
+      
+      if (match.played) {
+        // Remove previous result
+        if (previousHomeScore > previousAwayScore) {
+          homeWins--;
+          awayLosses--;
+        } else if (previousAwayScore > previousHomeScore) {
+          awayWins--;
+          homeLosses--;
+        } else {
+          homeDraws--;
+          awayDraws--;
+        }
+      }
+
+      // Add current live result
+      if (homeScore > awayScore) {
+        homeWins++;
+        awayLosses++;
+      } else if (awayScore > homeScore) {
+        awayWins++;
+        homeLosses++;
+      } else {
+        homeDraws++;
+        awayDraws++;
+      }
+
+      // Calculate goals (remove previous, add current)
+      const homeGoalsFor = homeTeam.goals_for - previousHomeScore + homeScore;
+      const homeGoalsAgainst = homeTeam.goals_against - previousAwayScore + awayScore;
+      const awayGoalsFor = awayTeam.goals_for - previousAwayScore + awayScore;
+      const awayGoalsAgainst = awayTeam.goals_against - previousHomeScore + homeScore;
+
+      // Update home team stats
+      await supabase
+        .from('teams')
+        .update({
+          wins: homeWins,
+          draws: homeDraws,
+          losses: homeLosses,
+          goals_for: homeGoalsFor,
+          goals_against: homeGoalsAgainst
+        })
+        .eq('id', match.home_team);
+
+      // Update away team stats
+      await supabase
+        .from('teams')
+        .update({
+          wins: awayWins,
+          draws: awayDraws,
+          losses: awayLosses,
+          goals_for: awayGoalsFor,
+          goals_against: awayGoalsAgainst
+        })
+        .eq('id', match.away_team);
+
+    } catch (error) {
+      console.error('Error updating live team stats:', error);
     }
   };
 

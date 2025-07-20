@@ -49,9 +49,10 @@ const Home = () => {
 
   // Auto-refresh data every 30 seconds for live matches
   useEffect(() => {
+    // More frequent updates for live matches (every 5 seconds)
     const interval = setInterval(() => {
       fetchData();
-    }, 30000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);

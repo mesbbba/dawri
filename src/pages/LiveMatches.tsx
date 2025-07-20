@@ -38,6 +38,16 @@ const LiveMatches = () => {
           fetchMatches();
         }
       )
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'teams'
+        }, 
+        () => {
+          fetchMatches();
+        }
+      )
       .subscribe();
 
     return () => {

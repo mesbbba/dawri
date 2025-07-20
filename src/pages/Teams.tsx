@@ -14,6 +14,35 @@ const Teams = () => {
 
   useEffect(() => {
     fetchTeams();
+    
+    // Set up real-time subscription for team updates
+    const subscription = supabase
+      .channel('teams-updates')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'teams'
+        }, 
+        () => {
+          fetchTeams();
+        }
+      )
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'matches'
+        }, 
+        () => {
+          fetchTeams();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
