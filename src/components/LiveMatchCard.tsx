@@ -17,6 +17,30 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showControls, setShowControls] = useState(false);
 
+  // Auto-increment minutes for live matches
+  useEffect(() => {
+    if (match.status === 'live') {
+      const interval = setInterval(async () => {
+        const currentMinute = match.current_minute || 0;
+        if (currentMinute < 90) { // Stop auto-increment at 90 minutes
+          try {
+            await supabase
+              .from('matches')
+              .update({
+                current_minute: currentMinute + 1
+              })
+              .eq('id', match.id);
+            onUpdate();
+          } catch (error) {
+            console.error('Error auto-updating minute:', error);
+          }
+        }
+      }, 60000); // Update every minute (60 seconds)
+
+      return () => clearInterval(interval);
+    }
+  }, [match.status, match.current_minute, match.id, onUpdate]);
+
   const startMatch = async () => {
     if (!user) return;
     setIsUpdating(true);
@@ -46,6 +70,7 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
     setIsUpdating(true);
     
     try {
+      // Update final scores and mark as finished
       const { error } = await supabase
         .from('matches')
         .update({
@@ -57,11 +82,82 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
         .eq('id', match.id);
 
       if (error) throw error;
+      
+      // Update team statistics
+      await updateTeamStats();
       onUpdate();
     } catch (error) {
       console.error('Error finishing match:', error);
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const updateTeamStats = async () => {
+    try {
+      const homeScore = match.live_home_score || 0;
+      const awayScore = match.live_away_score || 0;
+      
+      // Fetch current team stats
+      const { data: homeTeam } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', match.home_team)
+        .single();
+        
+      const { data: awayTeam } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', match.away_team)
+        .single();
+
+      if (!homeTeam || !awayTeam) return;
+
+      // Calculate new stats
+      let homeWins = homeTeam.wins;
+      let homeDraws = homeTeam.draws;
+      let homeLosses = homeTeam.losses;
+      let awayWins = awayTeam.wins;
+      let awayDraws = awayTeam.draws;
+      let awayLosses = awayTeam.losses;
+
+      if (homeScore > awayScore) {
+        homeWins++;
+        awayLosses++;
+      } else if (awayScore > homeScore) {
+        awayWins++;
+        homeLosses++;
+      } else {
+        homeDraws++;
+        awayDraws++;
+      }
+
+      // Update home team stats
+      await supabase
+        .from('teams')
+        .update({
+          wins: homeWins,
+          draws: homeDraws,
+          losses: homeLosses,
+          goals_for: homeTeam.goals_for + homeScore,
+          goals_against: homeTeam.goals_against + awayScore
+        })
+        .eq('id', match.home_team);
+
+      // Update away team stats
+      await supabase
+        .from('teams')
+        .update({
+          wins: awayWins,
+          draws: awayDraws,
+          losses: awayLosses,
+          goals_for: awayTeam.goals_for + awayScore,
+          goals_against: awayTeam.goals_against + homeScore
+        })
+        .eq('id', match.away_team);
+
+    } catch (error) {
+      console.error('Error updating team stats:', error);
     }
   };
 

@@ -16,6 +16,44 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
+    
+    // Set up real-time subscription for live updates
+    const subscription = supabase
+      .channel('live-updates')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'matches'
+        }, 
+        () => {
+          fetchData();
+        }
+      )
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'teams'
+        }, 
+        () => {
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Auto-refresh data every 30 seconds for live matches
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchData();
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchData = async () => {
@@ -78,7 +116,7 @@ const Home = () => {
           home_team_data:teams!matches_home_team_fkey(name, logo_url),
           away_team_data:teams!matches_away_team_fkey(name, logo_url)
         `)
-        .eq('played', false)
+        .in('status', ['scheduled', 'live'])
         .order('date', { ascending: true })
         .order('time', { ascending: true })
         .limit(3);

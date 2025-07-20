@@ -23,7 +23,16 @@ const LiveMatches = () => {
           event: '*', 
           schema: 'public', 
           table: 'matches',
-          filter: 'status=eq.live'
+        }, 
+        () => {
+          fetchMatches();
+        }
+      )
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'elimination_matches'
         }, 
         () => {
           fetchMatches();
@@ -31,12 +40,8 @@ const LiveMatches = () => {
       )
       .subscribe();
 
-    // Refresh every 30 seconds for live matches
-    const interval = setInterval(fetchMatches, 30000);
-
     return () => {
       subscription.unsubscribe();
-      clearInterval(interval);
     };
   }, []);
 

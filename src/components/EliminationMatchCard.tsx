@@ -17,6 +17,30 @@ const EliminationMatchCard: React.FC<EliminationMatchCardProps> = ({ match, onUp
   const [isUpdating, setIsUpdating] = useState(false);
   const [showControls, setShowControls] = useState(false);
 
+  // Auto-increment minutes for live matches
+  useEffect(() => {
+    if (match.status === 'live') {
+      const interval = setInterval(async () => {
+        const currentMinute = match.current_minute || 0;
+        if (currentMinute < 90) { // Stop auto-increment at 90 minutes
+          try {
+            await supabase
+              .from('elimination_matches')
+              .update({
+                current_minute: currentMinute + 1
+              })
+              .eq('id', match.id);
+            onUpdate();
+          } catch (error) {
+            console.error('Error auto-updating minute:', error);
+          }
+        }
+      }, 60000); // Update every minute (60 seconds)
+
+      return () => clearInterval(interval);
+    }
+  }, [match.status, match.current_minute, match.id, onUpdate]);
+
   const startMatch = async () => {
     if (!user) return;
     setIsUpdating(true);
