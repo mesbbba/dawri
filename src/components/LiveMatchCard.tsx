@@ -70,21 +70,24 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
     setIsUpdating(true);
     
     try {
+      const finalHomeScore = match.live_home_score || 0;
+      const finalAwayScore = match.live_away_score || 0;
+      
       // Update final scores and mark as finished
       const { error } = await supabase
         .from('matches')
         .update({
           status: 'finished',
           played: true,
-          home_score: match.live_home_score,
-          away_score: match.live_away_score
+          home_score: finalHomeScore,
+          away_score: finalAwayScore
         })
         .eq('id', match.id);
 
       if (error) throw error;
       
       // Update team statistics
-      await updateTeamStats();
+      await updateTeamStats(finalHomeScore, finalAwayScore);
       onUpdate();
     } catch (error) {
       console.error('Error finishing match:', error);
@@ -93,11 +96,8 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
     }
   };
 
-  const updateTeamStats = async () => {
+  const updateTeamStats = async (homeScore: number, awayScore: number) => {
     try {
-      const homeScore = match.live_home_score || 0;
-      const awayScore = match.live_away_score || 0;
-      
       // Fetch current team stats
       const { data: homeTeam } = await supabase
         .from('teams')
@@ -113,7 +113,7 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
 
       if (!homeTeam || !awayTeam) return;
 
-      // Calculate new stats
+      // Calculate new stats based on final result
       let homeWins = homeTeam.wins;
       let homeDraws = homeTeam.draws;
       let homeLosses = homeTeam.losses;
@@ -121,6 +121,7 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
       let awayDraws = awayTeam.draws;
       let awayLosses = awayTeam.losses;
 
+      // Award points based on final result (3 for win, 1 for draw, 0 for loss)
       if (homeScore > awayScore) {
         homeWins++;
         awayLosses++;
@@ -132,6 +133,12 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
         awayDraws++;
       }
 
+      // Update goals for and against
+      const homeGoalsFor = homeTeam.goals_for + homeScore;
+      const homeGoalsAgainst = homeTeam.goals_against + awayScore;
+      const awayGoalsFor = awayTeam.goals_for + awayScore;
+      const awayGoalsAgainst = awayTeam.goals_against + homeScore;
+
       // Update home team stats
       await supabase
         .from('teams')
@@ -139,8 +146,8 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
           wins: homeWins,
           draws: homeDraws,
           losses: homeLosses,
-          goals_for: homeTeam.goals_for + homeScore,
-          goals_against: homeTeam.goals_against + awayScore
+          goals_for: homeGoalsFor,
+          goals_against: homeGoalsAgainst
         })
         .eq('id', match.home_team);
 
@@ -151,8 +158,8 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
           wins: awayWins,
           draws: awayDraws,
           losses: awayLosses,
-          goals_for: awayTeam.goals_for + awayScore,
-          goals_against: awayTeam.goals_against + homeScore
+          goals_for: awayGoalsFor,
+          goals_against: awayGoalsAgainst
         })
         .eq('id', match.away_team);
 
@@ -188,103 +195,12 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match, onUpdate }) => {
 
       if (error) throw error;
       
-      // Update team statistics in real-time based on current live scores
-      await updateLiveTeamStats(newHomeScore, newAwayScore);
+      // Only update UI, no team stats during live play
       onUpdate();
     } catch (error) {
       console.error('Error updating score:', error);
     } finally {
       setIsUpdating(false);
-    }
-  };
-
-  const updateLiveTeamStats = async (homeScore: number, awayScore: number) => {
-    try {
-      // Fetch current team stats
-      const { data: homeTeam } = await supabase
-        .from('teams')
-        .select('*')
-        .eq('id', match.home_team)
-        .single();
-        
-      const { data: awayTeam } = await supabase
-        .from('teams')
-        .select('*')
-        .eq('id', match.away_team)
-        .single();
-
-      if (!homeTeam || !awayTeam) return;
-
-      // Calculate what the stats should be based on current live score
-      let homeWins = homeTeam.wins;
-      let homeDraws = homeTeam.draws;
-      let homeLosses = homeTeam.losses;
-      let awayWins = awayTeam.wins;
-      let awayDraws = awayTeam.draws;
-      let awayLosses = awayTeam.losses;
-
-      // Remove previous live match result if it was already counted
-      const previousHomeScore = match.home_score || 0;
-      const previousAwayScore = match.away_score || 0;
-      
-      if (match.played) {
-        // Remove previous result
-        if (previousHomeScore > previousAwayScore) {
-          homeWins--;
-          awayLosses--;
-        } else if (previousAwayScore > previousHomeScore) {
-          awayWins--;
-          homeLosses--;
-        } else {
-          homeDraws--;
-          awayDraws--;
-        }
-      }
-
-      // Add current live result
-      if (homeScore > awayScore) {
-        homeWins++;
-        awayLosses++;
-      } else if (awayScore > homeScore) {
-        awayWins++;
-        homeLosses++;
-      } else {
-        homeDraws++;
-        awayDraws++;
-      }
-
-      // Calculate goals (remove previous, add current)
-      const homeGoalsFor = homeTeam.goals_for - previousHomeScore + homeScore;
-      const homeGoalsAgainst = homeTeam.goals_against - previousAwayScore + awayScore;
-      const awayGoalsFor = awayTeam.goals_for - previousAwayScore + awayScore;
-      const awayGoalsAgainst = awayTeam.goals_against - previousHomeScore + homeScore;
-
-      // Update home team stats
-      await supabase
-        .from('teams')
-        .update({
-          wins: homeWins,
-          draws: homeDraws,
-          losses: homeLosses,
-          goals_for: homeGoalsFor,
-          goals_against: homeGoalsAgainst
-        })
-        .eq('id', match.home_team);
-
-      // Update away team stats
-      await supabase
-        .from('teams')
-        .update({
-          wins: awayWins,
-          draws: awayDraws,
-          losses: awayLosses,
-          goals_for: awayGoalsFor,
-          goals_against: awayGoalsAgainst
-        })
-        .eq('id', match.away_team);
-
-    } catch (error) {
-      console.error('Error updating live team stats:', error);
     }
   };
 

@@ -70,11 +70,14 @@ const EliminationMatchCard: React.FC<EliminationMatchCardProps> = ({ match, onUp
     setIsUpdating(true);
     
     try {
+      const finalTeam1Score = match.live_team1_score || 0;
+      const finalTeam2Score = match.live_team2_score || 0;
+      
       // Determine winner
       let winnerId = null;
-      if (match.live_team1_score > match.live_team2_score) {
+      if (finalTeam1Score > finalTeam2Score) {
         winnerId = match.team1_id;
-      } else if (match.live_team2_score > match.live_team1_score) {
+      } else if (finalTeam2Score > finalTeam1Score) {
         winnerId = match.team2_id;
       }
 
@@ -82,8 +85,8 @@ const EliminationMatchCard: React.FC<EliminationMatchCardProps> = ({ match, onUp
         .from('elimination_matches')
         .update({
           status: 'finished',
-          team1_score: match.live_team1_score,
-          team2_score: match.live_team2_score,
+          team1_score: finalTeam1Score,
+          team2_score: finalTeam2Score,
           winner_id: winnerId
         })
         .eq('id', match.id);
@@ -123,6 +126,8 @@ const EliminationMatchCard: React.FC<EliminationMatchCardProps> = ({ match, onUp
         .eq('id', match.id);
 
       if (error) throw error;
+      
+      // Only update UI, no team stats during live play for elimination matches
       onUpdate();
     } catch (error) {
       console.error('Error updating score:', error);
