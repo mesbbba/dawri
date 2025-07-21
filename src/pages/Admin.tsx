@@ -66,6 +66,13 @@ const Admin = () => {
     date: '',
     time: '15:00'
   });
+  const [teamStats, setTeamStats] = useState({
+    wins: 0,
+    draws: 0,
+    losses: 0,
+    goals_for: 0,
+    goals_against: 0
+  });
 
   useEffect(() => {
     if (user) {
@@ -132,6 +139,36 @@ const Admin = () => {
       fetchAllData();
     } catch (error) {
       console.error('Error saving team:', error);
+    }
+  };
+
+  const openEditTeamStats = (team: Team) => {
+    setEditingTeam(team);
+    setTeamStats({
+      wins: team.wins,
+      draws: team.draws,
+      losses: team.losses,
+      goals_for: team.goals_for,
+      goals_against: team.goals_against
+    });
+  };
+
+  const updateTeamStats = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTeam) return;
+
+    try {
+      const { error } = await supabase
+        .from('teams')
+        .update(teamStats)
+        .eq('id', editingTeam.id);
+
+      if (error) throw error;
+
+      setEditingTeam(null);
+      fetchAllData();
+    } catch (error) {
+      console.error('Error updating team stats:', error);
     }
   };
 
@@ -820,6 +857,134 @@ const Admin = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Team Stats Modal */}
+      {editingTeam && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md" dir="rtl">
+            <h3 className="text-lg font-semibold mb-4">تعديل إحصائيات الفريق</h3>
+            <div className="mb-4">
+              <div className="flex items-center space-x-3">
+                {editingTeam.logo_url ? (
+                  <img src={editingTeam.logo_url} alt="" className="h-10 w-10 rounded-full" />
+                ) : (
+                  <DefaultAvatar type="team" name={editingTeam.name} size="md" />
+                )}
+                <div>
+                  <h4 className="font-medium text-gray-900">{editingTeam.name}</h4>
+                  <p className="text-sm text-gray-600">المجموعة {editingTeam.group_name}</p>
+                </div>
+              </div>
+            </div>
+            
+            <form onSubmit={updateTeamStats}>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    الانتصارات
+                  </label>
+                  <input
+                    type="number"
+                    value={teamStats.wins}
+                    onChange={(e) => setTeamStats({...teamStats, wins: parseInt(e.target.value) || 0})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    min="0"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    التعادل
+                  </label>
+                  <input
+                    type="number"
+                    value={teamStats.draws}
+                    onChange={(e) => setTeamStats({...teamStats, draws: parseInt(e.target.value) || 0})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    min="0"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    الهزائم
+                  </label>
+                  <input
+                    type="number"
+                    value={teamStats.losses}
+                    onChange={(e) => setTeamStats({...teamStats, losses: parseInt(e.target.value) || 0})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    min="0"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    النقاط المحسوبة
+                  </label>
+                  <div className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700">
+                    {teamStats.wins * 3 + teamStats.draws}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    الأهداف المسجلة
+                  </label>
+                  <input
+                    type="number"
+                    value={teamStats.goals_for}
+                    onChange={(e) => setTeamStats({...teamStats, goals_for: parseInt(e.target.value) || 0})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    min="0"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    الأهداف المستقبلة
+                  </label>
+                  <input
+                    type="number"
+                    value={teamStats.goals_against}
+                    onChange={(e) => setTeamStats({...teamStats, goals_against: parseInt(e.target.value) || 0})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    min="0"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                <h5 className="text-sm font-medium text-gray-700 mb-2">ملخص الإحصائيات</h5>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>المباريات: <span className="font-medium">{teamStats.wins + teamStats.draws + teamStats.losses}</span></div>
+                  <div>النقاط: <span className="font-medium text-blue-600">{teamStats.wins * 3 + teamStats.draws}</span></div>
+                  <div>فارق الأهداف: <span className={`font-medium ${teamStats.goals_for - teamStats.goals_against >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {teamStats.goals_for - teamStats.goals_against > 0 ? '+' : ''}{teamStats.goals_for - teamStats.goals_against}
+                  </span></div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingTeam(null)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="submit"
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors flex items-center space-x-2"
+                >
+                  <Save className="h-4 w-4" />
+                  <span>حفظ التغييرات</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Add/Edit Team Modal */}
       {(showAddTeam || editingTeam) && (
