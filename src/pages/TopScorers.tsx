@@ -3,15 +3,21 @@ import { supabase } from '../lib/supabase';
 import { Player } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DefaultAvatar from '../components/DefaultAvatar';
-import { Trophy, Target, Medal } from 'lucide-react';
+import { Trophy, Target, Medal, Search, Filter } from 'lucide-react';
 
 const TopScorers = () => {
   const [players, setPlayers] = useState<Player[]>([]);
+  const [filteredPlayers, setFilteredPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchTopScorers();
   }, []);
+
+  useEffect(() => {
+    filterPlayers();
+  }, [players, searchTerm]);
 
   const fetchTopScorers = async () => {
     try {
@@ -31,6 +37,20 @@ const TopScorers = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterPlayers = () => {
+    let filtered = players;
+    
+    // Filter by search term
+    if (searchTerm) {
+      filtered = players.filter(player => 
+        player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        player.team?.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredPlayers(filtered);
   };
 
   const getRankIcon = (position: number) => {
@@ -55,9 +75,23 @@ const TopScorers = () => {
         <p className="text-gray-600">أفضل هدافي الدوري</p>
       </div>
 
+      {/* Search Bar */}
+      <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="البحث عن اللاعبين..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+        </div>
+      </div>
+
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="divide-y divide-gray-200">
-          {players.map((player, index) => (
+          {filteredPlayers.map((player, index) => (
             <div key={player.id} className="p-6 hover:bg-gray-50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">

@@ -18,7 +18,8 @@ import {
   LogOut,
   Menu,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Search
 } from 'lucide-react';
 
 const Admin = () => {
@@ -26,6 +27,8 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'teams' | 'players' | 'matches' | 'eliminations'>('teams');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGroup, setSelectedGroup] = useState<string>('all');
   
   // Data states
   const [teams, setTeams] = useState<Team[]>([]);
@@ -266,6 +269,26 @@ const Admin = () => {
     }
   };
 
+  // Filter functions
+  const filteredTeams = teams.filter(team => {
+    const matchesSearch = team.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGroup = selectedGroup === 'all' || team.group_name === selectedGroup;
+    return matchesSearch && matchesGroup;
+  });
+
+  const filteredPlayers = players.filter(player => {
+    const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         player.team?.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGroup = selectedGroup === 'all' || player.team?.group_name === selectedGroup;
+    return matchesSearch && matchesGroup;
+  });
+
+  const filteredMatches = matches.filter(match => {
+    const matchesSearch = match.home_team_data?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         match.away_team_data?.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -402,6 +425,40 @@ const Admin = () => {
         {/* Main Content */}
         <div className="flex-1 overflow-hidden">
           <div className="p-4 lg:p-8">
+            {/* Search and Filter Bar */}
+            <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                {/* Search Input */}
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="البحث..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                
+                {/* Group Filter (for teams and players) */}
+                {(activeTab === 'teams' || activeTab === 'players') && (
+                  <div className="sm:w-48">
+                    <select
+                      value={selectedGroup}
+                      onChange={(e) => setSelectedGroup(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="all">جميع المجموعات</option>
+                      <option value="A">المجموعة A</option>
+                      <option value="B">المجموعة B</option>
+                      <option value="C">المجموعة C</option>
+                      <option value="D">المجموعة D</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Teams Tab */}
             {activeTab === 'teams' && (
               <div className="space-y-6">
@@ -418,7 +475,7 @@ const Admin = () => {
 
                 {/* Teams Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                  {teams.map((team) => (
+                  {filteredTeams.map((team) => (
                     <div key={team.id} className="bg-white rounded-lg shadow p-4 lg:p-6">
                       <div className="flex items-center space-x-4 mb-4">
                         {team.logo_url ? (
@@ -498,7 +555,7 @@ const Admin = () => {
 
                 {/* Players Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {players.map((player) => (
+                  {filteredPlayers.map((player) => (
                     <div key={player.id} className="bg-white rounded-lg shadow p-4">
                       <div className="flex items-center space-x-3 mb-3">
                         <DefaultAvatar type="player" name={player.name} size="md" />
@@ -566,7 +623,7 @@ const Admin = () => {
                 {/* Matches List */}
                 <div className="bg-white shadow overflow-hidden sm:rounded-md">
                   <ul className="divide-y divide-gray-200">
-                    {matches.map((match) => (
+                    {filteredMatches.map((match) => (
                       <li key={match.id} className="px-4 py-4 sm:px-6">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                           <div className="flex-1">

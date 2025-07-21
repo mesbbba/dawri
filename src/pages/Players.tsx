@@ -3,17 +3,23 @@ import { supabase } from '../lib/supabase';
 import { Player, Team } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DefaultAvatar from '../components/DefaultAvatar';
-import { User, Target, Users } from 'lucide-react';
+import { User, Target, Users, Search, Filter } from 'lucide-react';
 
 const Players = () => {
   const [players, setPlayers] = useState<Player[]>([]);
+  const [filteredPlayers, setFilteredPlayers] = useState<Player[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTeam, setSelectedTeam] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    filterPlayers();
+  }, [players, selectedTeam, searchTerm]);
 
   const fetchData = async () => {
     try {
@@ -43,9 +49,24 @@ const Players = () => {
     }
   };
 
-  const filteredPlayers = selectedTeam === 'all' 
-    ? players 
-    : players.filter(player => player.team_id === selectedTeam);
+  const filterPlayers = () => {
+    let filtered = players;
+    
+    // Filter by team
+    if (selectedTeam !== 'all') {
+      filtered = players.filter(player => player.team_id === selectedTeam);
+    }
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(player => 
+        player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        player.team?.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredPlayers(filtered);
+  };
 
   if (loading) return <LoadingSpinner />;
 
@@ -56,20 +77,38 @@ const Players = () => {
         <p className="text-gray-600">جميع لاعبي الدوري</p>
       </div>
 
-      {/* Team Filter */}
-      <div className="mb-6">
-        <select
-          value={selectedTeam}
-          onChange={(e) => setSelectedTeam(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-        >
-          <option value="all">جميع الفرق</option>
-          {teams.map((team) => (
-            <option key={team.id} value={team.id}>
-              {team.name}
-            </option>
-          ))}
-        </select>
+      {/* Search and Filter Bar */}
+      <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Search Input */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="البحث عن اللاعبين..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+          
+          {/* Team Filter */}
+          <div className="sm:w-48 flex items-center space-x-2">
+            <Filter className="h-5 w-5 text-gray-500" />
+            <select
+              value={selectedTeam}
+              onChange={(e) => setSelectedTeam(e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="all">جميع الفرق</option>
+              {teams.map((team) => (
+                <option key={team.id} value={team.id}>
+                  {team.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Players Grid */}

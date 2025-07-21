@@ -4,13 +4,14 @@ import { Match } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DefaultAvatar from '../components/DefaultAvatar';
 import MatchDetail from '../components/MatchDetail';
-import { Calendar, Filter } from 'lucide-react';
+import { Calendar, Filter, Search } from 'lucide-react';
 
 const Matches = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'played' | 'upcoming'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
 
   useEffect(() => {
@@ -74,10 +75,19 @@ const Matches = () => {
   const filterMatches = () => {
     let filtered = matches;
     
+    // Filter by status
     if (filter === 'played') {
       filtered = matches.filter(match => match.status === 'finished');
     } else if (filter === 'upcoming') {
       filtered = matches.filter(match => match.status === 'scheduled');
+    }
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(match => 
+        match.home_team_data?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        match.away_team_data?.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
 
     setFilteredMatches(filtered);
@@ -92,38 +102,55 @@ const Matches = () => {
         <p className="text-gray-600">جميع مباريات الدوري والنتائج</p>
       </div>
 
-      {/* Filter Buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        <button
-          onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-md font-medium transition-colors ${
-            filter === 'all'
-              ? 'bg-emerald-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          جميع المباريات
-        </button>
-        <button
-          onClick={() => setFilter('played')}
-          className={`px-4 py-2 rounded-md font-medium transition-colors ${
-            filter === 'played'
-              ? 'bg-emerald-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          النتائج
-        </button>
-        <button
-          onClick={() => setFilter('upcoming')}
-          className={`px-4 py-2 rounded-md font-medium transition-colors ${
-            filter === 'upcoming'
-              ? 'bg-emerald-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          المباريات القادمة
-        </button>
+      {/* Search and Filter Bar */}
+      <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
+        <div className="flex flex-col sm:flex-row gap-4 mb-4">
+          {/* Search Input */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="البحث عن الفرق..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+        </div>
+        
+        {/* Filter Buttons */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              filter === 'all'
+                ? 'bg-emerald-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            جميع المباريات
+          </button>
+          <button
+            onClick={() => setFilter('played')}
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              filter === 'played'
+                ? 'bg-emerald-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            النتائج
+          </button>
+          <button
+            onClick={() => setFilter('upcoming')}
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              filter === 'upcoming'
+                ? 'bg-emerald-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            المباريات القادمة
+          </button>
+        </div>
       </div>
 
       {/* Matches List */}
